@@ -7,6 +7,7 @@ import type { ErrorRowProperties } from './error_row';
 import { ErrorRow } from './error_row';
 import type { NoDataTextProperties } from './no_data_text';
 import { NoDataText } from './no_data_text';
+import { VirtualRow } from './virtual_scrolling/virtual_row';
 
 export const CLASSES = {
   content: 'dx-gridcore-content',
@@ -20,6 +21,11 @@ export interface ContentViewProps {
   items: DataRow[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fieldTemplate?: any;
+
+  virtualScrollingProps?: {
+    heightUp?: number;
+    heightDown?: number;
+  };
 }
 
 export function ContentView(props: ContentViewProps): JSX.Element {
@@ -31,10 +37,18 @@ export function ContentView(props: ContentViewProps): JSX.Element {
 
       <Scrollable componentRef={this.scrollableRef}>
         <div className={CLASSES.content} tabIndex={0}>
+          {
+            props.virtualScrollingProps?.heightUp
+            && <VirtualRow height={props.virtualScrollingProps?.heightUp}/>
+          }
           <Content
             items={props.items}
             fieldTemplate={props.fieldTemplate}
           />
+          {
+            props.virtualScrollingProps?.heightDown
+            && <VirtualRow height={props.virtualScrollingProps?.heightDown}/>
+          }
         </div>
       </Scrollable>
     </>
