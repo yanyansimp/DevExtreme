@@ -38,7 +38,7 @@ export type WidgetName =
   | 'dxMultiView'
   | 'dxNumberBox'
   | 'dxOverlay'
-  | 'dxPager'
+  | 'dxPagination'
   | 'dxPivotGrid'
   | 'dxPivotGridFieldChooser'
   | 'dxPopover'

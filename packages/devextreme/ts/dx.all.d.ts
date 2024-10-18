@@ -251,6 +251,12 @@ declare global {
     dxNumberBox(options: string): any;
     dxNumberBox(options: string, ...params: any[]): any;
 
+    dxPagination(): JQuery;
+    dxPagination(options: 'instance'): DevExpress.ui.dxPagination;
+    dxPagination(options: DevExpress.ui.dxPagination.Properties): JQuery;
+    dxPagination(options: string): any;
+    dxPagination(options: string, ...params: any[]): any;
+
     dxPieChart(): JQuery;
     dxPieChart(options: 'instance'): DevExpress.viz.dxPieChart;
     dxPieChart(options: DevExpress.viz.dxPieChart.Properties): JQuery;
@@ -1403,6 +1409,7 @@ declare module DevExpress.common {
     | 'object'
     | 'datetime';
   export type Direction = 'bottom' | 'left' | 'right' | 'top';
+  export type DisplayMode = 'adaptive' | 'compact' | 'full';
   export type DragDirection = 'both' | 'horizontal' | 'vertical';
   export type Draggable =
     DevExpress.core.OmitInternal<DevExpress.ui.dxDraggable>;
@@ -1651,6 +1658,36 @@ declare module DevExpress.common {
   export type Orientation = 'horizontal' | 'vertical';
   export type PageLoadMode = 'nextButton' | 'scrollBottom';
   export type PageOrientation = 'portrait' | 'landscape';
+  /**
+   * [descr:PagerBase]
+   * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
+   */
+  export type PagerBase = {
+    /**
+     * [descr:PagerBase.displayMode]
+     */
+    displayMode?: DisplayMode;
+    /**
+     * [descr:PagerBase.infoText]
+     */
+    infoText?: string;
+    /**
+     * [descr:PagerBase.showInfo]
+     */
+    showInfo?: boolean;
+    /**
+     * [descr:PagerBase.showNavigationButtons]
+     */
+    showNavigationButtons?: boolean;
+    /**
+     * [descr:PagerBase.showPageSizeSelector]
+     */
+    showPageSizeSelector?: boolean;
+    /**
+     * [descr:PagerBase.label]
+     */
+    label?: string;
+  };
   /**
    * [descr:PatternRule]
    */
@@ -4283,41 +4320,17 @@ declare module DevExpress.common.grids {
   /**
    * [descr:Pager]
    */
-  export type Pager = {
+  export type Pager = PagerBase & {
     /**
-     * [descr:GridBaseOptions.pager.allowedPageSizes]
+     * [descr:Pager.allowedPageSizes]
      */
     allowedPageSizes?: Array<number | PagerPageSize> | Mode;
+
     /**
-     * [descr:GridBaseOptions.pager.displayMode]
-     */
-    displayMode?: PagerDisplayMode;
-    /**
-     * [descr:GridBaseOptions.pager.infoText]
-     */
-    infoText?: string;
-    /**
-     * [descr:GridBaseOptions.pager.showInfo]
-     */
-    showInfo?: boolean;
-    /**
-     * [descr:GridBaseOptions.pager.showNavigationButtons]
-     */
-    showNavigationButtons?: boolean;
-    /**
-     * [descr:GridBaseOptions.pager.showPageSizeSelector]
-     */
-    showPageSizeSelector?: boolean;
-    /**
-     * [descr:GridBaseOptions.pager.visible]
+     * [descr:Pager.visible]
      */
     visible?: boolean | Mode;
-    /**
-     * [descr:GridBaseOptions.pager.label]
-     */
-    label?: string;
   };
-  export type PagerDisplayMode = 'adaptive' | 'compact' | 'full';
   export type PagerPageSize = 'all' | 'auto';
   /**
    * [descr:PagingBase]
@@ -7991,40 +8004,26 @@ declare module DevExpress.ui {
      */
     export type ItemLike = string | CollectionWidgetItem | any;
     /**
-     * [descr:SelectionChangedInfo]
+     * [descr:SelectionChangeInfo]
      * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
      */
-    export interface SelectionChangedInfo<TItem extends ItemLike = any> {
+    export interface SelectionChangeInfo<TItem extends ItemLike = any> {
       /**
-       * [descr:SelectionChangedInfo.addedItems]
+       * [descr:SelectionChangeInfo.addedItems]
        */
       readonly addedItems: Array<TItem>;
       /**
-       * [descr:SelectionChangedInfo.removedItems]
+       * [descr:SelectionChangeInfo.removedItems]
        */
       readonly removedItems: Array<TItem>;
     }
     /**
-     * [descr:SelectionChangingEvent]
+     * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
      */
-    export type SelectionChangingEvent<TComponent> =
+    export type SelectionChangingEventBase<TComponent> =
       DevExpress.events.AsyncCancelable &
         DevExpress.events.EventInfo<TComponent> &
-        SelectionChangingInfo;
-    /**
-     * [descr:SelectionChangingInfo]
-     * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
-     */
-    export interface SelectionChangingInfo<TItem extends ItemLike = any> {
-      /**
-       * [descr:SelectionChangingInfo.addedItems]
-       */
-      readonly addedItems: Array<TItem>;
-      /**
-       * [descr:SelectionChangingInfo.removedItems]
-       */
-      readonly removedItems: Array<TItem>;
-    }
+        SelectionChangeInfo;
   }
   /**
    * [descr:CollectionWidgetItem]
@@ -8140,14 +8139,14 @@ declare module DevExpress.ui {
      * [descr:CollectionWidgetOptions.onSelectionChanging]
      */
     onSelectionChanging?: (
-      e: DevExpress.ui.CollectionWidget.SelectionChangingEvent<TComponent>
+      e: DevExpress.ui.CollectionWidget.SelectionChangingEventBase<TComponent>
     ) => void;
     /**
      * [descr:CollectionWidgetOptions.onSelectionChanged]
      */
     onSelectionChanged?: (
       e: DevExpress.events.EventInfo<TComponent> &
-        DevExpress.ui.CollectionWidget.SelectionChangedInfo<TItem>
+        DevExpress.ui.CollectionWidget.SelectionChangeInfo<TItem>
     ) => void;
     /**
      * [descr:CollectionWidgetOptions.selectedIndex]
@@ -8487,7 +8486,7 @@ declare module DevExpress.ui {
       TItem extends ItemLike = any,
       TKey = any
     > = DevExpress.events.EventInfo<dxAccordion<TItem, TKey>> &
-      DevExpress.ui.CollectionWidget.SelectionChangedInfo<TItem>;
+      DevExpress.ui.CollectionWidget.SelectionChangeInfo<TItem>;
   }
   /**
    * @deprecated Use Item instead
@@ -8919,12 +8918,6 @@ declare module DevExpress.ui {
       DevExpress.events.EventInfo<dxAutocomplete> &
         DevExpress.ui.dxDropDownList.SelectionChangedInfo;
     /**
-     * [descr:_ui_autocomplete_SelectionChangingEvent]
-     */
-    export type SelectionChangingEvent = DevExpress.events.AsyncCancelable &
-      DevExpress.events.EventInfo<dxAutocomplete> &
-      DevExpress.ui.dxDropDownList.SelectionChangingInfo;
-    /**
      * [descr:_ui_autocomplete_ValueChangedEvent]
      */
     export type ValueChangedEvent = DevExpress.events.NativeEventInfo<
@@ -9198,7 +9191,7 @@ declare module DevExpress.ui {
      */
     export type SelectionChangedEvent =
       DevExpress.events.EventInfo<dxButtonGroup> &
-        DevExpress.ui.CollectionWidget.SelectionChangedInfo;
+        DevExpress.ui.CollectionWidget.SelectionChangeInfo;
   }
   /**
    * @deprecated Use Item instead
@@ -9945,7 +9938,7 @@ declare module DevExpress.ui {
     export type SelectionChangedEvent<TKey = any> = DevExpress.events.EventInfo<
       dxContextMenu<TKey>
     > &
-      DevExpress.ui.CollectionWidget.SelectionChangedInfo<Item>;
+      DevExpress.ui.CollectionWidget.SelectionChangeInfo<Item>;
     /**
      * [descr:_ui_context_menu_ShowingEvent]
      */
@@ -14940,23 +14933,6 @@ declare module DevExpress.ui {
        */
       readonly selectedItem: T;
     }
-    /**
-     * [descr:_ui_drop_down_editor_ui_drop_down_list_SelectionChangingEvent]
-     */
-    export type SelectionChangingEvent<TComponent> =
-      DevExpress.events.AsyncCancelable &
-        DevExpress.events.EventInfo<TComponent> &
-        SelectionChangingInfo;
-    /**
-     * [descr:_ui_drop_down_editor_ui_drop_down_list_SelectionChangingInfo]
-     * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
-     */
-    export interface SelectionChangingInfo<T = any> {
-      /**
-       * [descr:_ui_drop_down_editor_ui_drop_down_list_SelectionChangingInfo.selectedItem]
-       */
-      readonly selectedItem: T;
-    }
   }
   /**
    * [descr:dxDropDownListOptions]
@@ -15000,12 +14976,6 @@ declare module DevExpress.ui {
         KeyboardEvent | MouseEvent | PointerEvent
       > &
         DevExpress.events.ItemInfo
-    ) => void;
-    /**
-     * [descr:dxDropDownListOptions.onSelectionChanging]
-     */
-    onSelectionChanging?: (
-      e: DevExpress.ui.dxDropDownList.SelectionChangingEvent<TComponent>
     ) => void;
     /**
      * [descr:dxDropDownListOptions.onSelectionChanged]
@@ -17473,7 +17443,7 @@ declare module DevExpress.ui {
       TItem extends ItemLike = any,
       TKey = any
     > = DevExpress.events.EventInfo<dxGallery<TItem, TKey>> &
-      DevExpress.ui.CollectionWidget.SelectionChangedInfo<TItem>;
+      DevExpress.ui.CollectionWidget.SelectionChangeInfo<TItem>;
   }
   /**
    * @deprecated Use Item instead
@@ -19280,7 +19250,6 @@ declare module DevExpress.ui {
      */
     export type InitializedEvent =
       DevExpress.events.InitializedEventInfo<dxHtmlEditor>;
-    export type MarkupType = 'html' | 'markdown';
     export interface MentionTemplateData {
       readonly marker: string;
       readonly id?: string | number;
@@ -19465,10 +19434,6 @@ declare module DevExpress.ui {
      * [descr:dxHtmlEditorOptions.toolbar]
      */
     toolbar?: dxHtmlEditorToolbar;
-    /**
-     * [descr:dxHtmlEditorOptions.valueType]
-     */
-    valueType?: DevExpress.ui.dxHtmlEditor.MarkupType;
     /**
      * [descr:dxHtmlEditorOptions.variables]
      */
@@ -19974,16 +19939,16 @@ declare module DevExpress.ui {
       TItem extends ItemLike = any,
       TKey = any
     > = DevExpress.events.EventInfo<dxList<TItem, TKey>> &
-      DevExpress.ui.CollectionWidget.SelectionChangedInfo<TItem>;
+      DevExpress.ui.CollectionWidget.SelectionChangeInfo<TItem>;
     /**
      * [descr:_ui_list_SelectionChangingEvent]
      */
     export type SelectionChangingEvent<
       TItem extends ItemLike = any,
       TKey = any
-    > = DevExpress.events.AsyncCancelable &
-      DevExpress.events.EventInfo<dxList<TItem, TKey>> &
-      DevExpress.ui.CollectionWidget.SelectionChangingInfo<TItem>;
+    > = DevExpress.ui.CollectionWidget.SelectionChangingEventBase<
+      dxList<TItem, TKey>
+    >;
   }
   /**
    * @deprecated Use Item instead
@@ -20454,12 +20419,6 @@ declare module DevExpress.ui {
      */
     export type SelectionChangedEvent = DevExpress.events.EventInfo<dxLookup> &
       DevExpress.ui.dxDropDownList.SelectionChangedInfo;
-    /**
-     * [descr:_ui_lookup_SelectionChangingEvent]
-     */
-    export type SelectionChangingEvent = DevExpress.events.AsyncCancelable &
-      DevExpress.events.EventInfo<dxLookup> &
-      DevExpress.ui.dxDropDownList.SelectionChangingInfo;
     export type TitleRenderedEvent = DevExpress.events.EventInfo<dxLookup> &
       DevExpress.ui.dxPopup.TitleRenderedInfo;
     /**
@@ -20663,7 +20622,7 @@ declare module DevExpress.ui {
      */
     export type InitializedEvent =
       DevExpress.events.InitializedEventInfo<dxMap>;
-    export type MapProvider = 'bing' | 'google' | 'googleStatic';
+    export type MapProvider = 'azure' | 'bing' | 'google' | 'googleStatic';
     export type MapType = 'hybrid' | 'roadmap' | 'satellite';
     /**
      * [descr:_ui_map_MarkerAddedEvent]
@@ -20739,7 +20698,12 @@ declare module DevExpress.ui {
       | string
       | {
           /**
+           * [descr:dxMapOptions.apiKey.azure]
+           */
+          azure?: string;
+          /**
            * [descr:dxMapOptions.apiKey.bing]
+           * @deprecated [depNote:dxMapOptions.apiKey.bing]
            */
           bing?: string;
           /**
@@ -21003,7 +20967,7 @@ declare module DevExpress.ui {
     export type SelectionChangedEvent<TKey = any> = DevExpress.events.EventInfo<
       dxMenu<TKey>
     > &
-      DevExpress.ui.CollectionWidget.SelectionChangedInfo<Item>;
+      DevExpress.ui.CollectionWidget.SelectionChangeInfo<Item>;
     export type SubmenuDirection = 'auto' | 'leftOrTop' | 'rightOrBottom';
     /**
      * [descr:_ui_menu_SubmenuHiddenEvent]
@@ -21395,7 +21359,7 @@ declare module DevExpress.ui {
       TItem extends ItemLike = any,
       TKey = any
     > = DevExpress.events.EventInfo<dxMultiView<TItem, TKey>> &
-      DevExpress.ui.CollectionWidget.SelectionChangedInfo<TItem>;
+      DevExpress.ui.CollectionWidget.SelectionChangeInfo<TItem>;
   }
   /**
    * [descr:dxMultiViewOptions]
@@ -21773,6 +21737,46 @@ declare module DevExpress.ui {
      * [descr:dxOverlayOptions.wrapperAttr]
      */
     wrapperAttr?: any;
+  }
+  /**
+   * [descr:dxPagination]
+   */
+  export class dxPagination extends Widget<DevExpress.ui.dxPagination.Properties> {
+    /**
+     * [descr:dxPagination.getPageCount()]
+     */
+    getPageCount(): number;
+  }
+  module dxPagination {
+    export type PageSize = number | 'all';
+    export type Properties = dxPaginationOptions;
+  }
+  /**
+   * [descr:dxPaginationOptions]
+   * @deprecated [depNote:dxPaginationOptions]
+   */
+  export interface dxPaginationOptions
+    extends DevExpress.common.PagerBase,
+      WidgetOptions<dxPagination> {
+    /**
+     * [descr:dxPaginationOptions.pageIndex]
+     */
+    pageIndex?: number;
+
+    /**
+     * [descr:dxPaginationOptions.pageSize]
+     */
+    pageSize?: number;
+
+    /**
+     * [descr:dxPaginationOptions.itemCount]
+     */
+    itemCount?: number;
+
+    /**
+     * [descr:dxPaginationOptions.allowedPageSizes]
+     */
+    allowedPageSizes?: Array<DevExpress.ui.dxPagination.PageSize>;
   }
   /**
    * [descr:dxPivotGrid]
@@ -25047,12 +25051,6 @@ declare module DevExpress.ui {
       DevExpress.events.EventInfo<dxSelectBox> &
         DevExpress.ui.dxDropDownList.SelectionChangedInfo;
     /**
-     * [descr:_ui_select_box_SelectionChangingEvent]
-     */
-    export type SelectionChangingEvent = DevExpress.events.AsyncCancelable &
-      DevExpress.events.EventInfo<dxSelectBox> &
-      DevExpress.ui.dxDropDownList.SelectionChangingInfo;
-    /**
      * [descr:_ui_select_box_ValueChangedEvent]
      */
     export type ValueChangedEvent = DevExpress.events.NativeEventInfo<
@@ -26159,16 +26157,16 @@ declare module DevExpress.ui {
       TItem extends ItemLike = any,
       TKey = any
     > = DevExpress.events.EventInfo<dxTabPanel<TItem, TKey>> &
-      DevExpress.ui.CollectionWidget.SelectionChangedInfo<TItem>;
+      DevExpress.ui.CollectionWidget.SelectionChangeInfo<TItem>;
     /**
      * [descr:_ui_tab_panel_SelectionChangingEvent]
      */
     export type SelectionChangingEvent<
       TItem extends ItemLike = any,
       TKey = any
-    > = DevExpress.events.AsyncCancelable &
-      DevExpress.events.EventInfo<dxTabPanel<TItem, TKey>> &
-      DevExpress.ui.CollectionWidget.SelectionChangingInfo<TItem>;
+    > = DevExpress.ui.CollectionWidget.SelectionChangingEventBase<
+      dxTabPanel<TItem, TKey>
+    >;
     /**
      * [descr:TabPanelItemInfo]
      * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
@@ -26433,16 +26431,16 @@ declare module DevExpress.ui {
       TItem extends ItemLike = any,
       TKey = any
     > = DevExpress.events.EventInfo<dxTabs<TItem, TKey>> &
-      DevExpress.ui.CollectionWidget.SelectionChangedInfo<TItem>;
+      DevExpress.ui.CollectionWidget.SelectionChangeInfo<TItem>;
     /**
      * [descr:_ui_tabs_SelectionChangingEvent]
      */
     export type SelectionChangingEvent<
       TItem extends ItemLike = any,
       TKey = any
-    > = DevExpress.events.AsyncCancelable &
-      DevExpress.events.EventInfo<dxTabs<TItem, TKey>> &
-      DevExpress.ui.CollectionWidget.SelectionChangingInfo<TItem>;
+    > = DevExpress.ui.CollectionWidget.SelectionChangingEventBase<
+      dxTabs<TItem, TKey>
+    >;
   }
   /**
    * [descr:dxTabsOptions]
@@ -26655,17 +26653,7 @@ declare module DevExpress.ui {
      * [descr:_ui_tag_box_SelectionChangedEvent]
      */
     export type SelectionChangedEvent = DevExpress.events.EventInfo<dxTagBox> &
-      DevExpress.ui.CollectionWidget.SelectionChangedInfo<
-        string | number | any
-      >;
-    /**
-     * [descr:_ui_tag_box_SelectionChangingEvent]
-     */
-    export type SelectionChangingEvent = DevExpress.events.AsyncCancelable &
-      DevExpress.events.EventInfo<dxTagBox> &
-      DevExpress.ui.CollectionWidget.SelectionChangingInfo<
-        string | number | any
-      >;
+      DevExpress.ui.CollectionWidget.SelectionChangeInfo<string | number | any>;
     /**
      * [descr:_ui_tag_box_ValueChangedEvent]
      */
@@ -26683,10 +26671,7 @@ declare module DevExpress.ui {
   export interface dxTagBoxOptions
     extends Pick<
       dxSelectBoxOptions<dxTagBox>,
-      Exclude<
-        keyof dxSelectBoxOptions<dxTagBox>,
-        'onSelectionChanged' | 'onSelectionChanging'
-      >
+      Exclude<keyof dxSelectBoxOptions<dxTagBox>, 'onSelectionChanged'>
     > {
     /**
      * [descr:dxTagBoxOptions.applyValueMode]
@@ -26715,12 +26700,6 @@ declare module DevExpress.ui {
      */
     onSelectAllValueChanged?: (
       e: DevExpress.ui.dxTagBox.SelectAllValueChangedEvent
-    ) => void;
-    /**
-     * [descr:dxTagBoxOptions.onSelectionChanging]
-     */
-    onSelectionChanging?: (
-      e: DevExpress.ui.dxTagBox.SelectionChangingEvent
     ) => void;
     /**
      * [descr:dxTagBoxOptions.onSelectionChanged]
