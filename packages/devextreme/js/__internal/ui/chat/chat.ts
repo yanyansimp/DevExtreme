@@ -67,6 +67,9 @@ class Chat extends Widget<Properties> {
       dayHeaderFormat: 'shortdate',
       messageTimestampFormat: 'shorttime',
       errors: [],
+      showAvatar: true,
+      showUserName: true,
+      showMessageTimestamp: true,
       onMessageSend: undefined,
       messageTemplate: null,
       onTypingStart: undefined,
@@ -135,7 +138,10 @@ class Chat extends Widget<Properties> {
     const {
       items = [],
       user,
-      showDayHeaders = true,
+      showDayHeaders = false,
+      showAvatar = false,
+      showUserName = false,
+      showMessageTimestamp = false,
       messageTemplate,
       dayHeaderFormat,
       messageTimestampFormat,
@@ -154,6 +160,9 @@ class Chat extends Widget<Properties> {
       messageTemplateData: { component: this },
       // @ts-expect-error
       isLoading: this._dataController.isLoading(),
+      showAvatar,
+      showUserName,
+      showMessageTimestamp,
       dayHeaderFormat,
       messageTimestampFormat,
     });
@@ -317,6 +326,11 @@ class Chat extends Widget<Properties> {
         this._createTypingEndAction();
         break;
       case 'showDayHeaders':
+      case 'showAvatar':
+      case 'showUserName':
+      case 'showMessageTimestamp':
+        this._messageList.option(name, !!value);
+        break;
       case 'messageTemplate':
       case 'dayHeaderFormat':
       case 'messageTimestampFormat':

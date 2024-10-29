@@ -189,26 +189,50 @@ QUnit.module('Chat', () => {
             assert.deepEqual(messageList.option('items'), newItems, 'items value is updated');
         });
 
-        QUnit.test('Chat should pass showDayHeaders to messageList on init', function(assert) {
-            this.reinit({
-                showDayHeaders: false,
+        ['showDayHeaders', 'showAvatar', 'showUserName', 'showMessageTimestamp'].forEach(option => {
+            QUnit.test(`Chat should pass ${option} to messageList on init`, function(assert) {
+                this.reinit({
+                    [option]: false,
+                });
+
+                const messageList = this.getMessageList();
+
+                assert.strictEqual(messageList.option(option), false, `${option} is passed on init`);
             });
 
-            const messageList = this.getMessageList();
+            QUnit.test(`Chat should pass ${option} to messageList at runtime`, function(assert) {
+                this.reinit({
+                    [option]: true,
+                });
 
-            assert.strictEqual(messageList.option('showDayHeaders'), false, 'showDayHeaders is passed on init');
-        });
+                const messageList = this.getMessageList();
 
-        QUnit.test('Chat should pass showDayHeaders to messageList at runtime', function(assert) {
-            this.reinit({
-                showDayHeaders: true,
+                this.instance.option(option, false);
+
+                assert.strictEqual(messageList.option(option), false, `${option} is passed on runtime`);
             });
 
-            const messageList = this.getMessageList();
+            QUnit.test(`Chat should pass ${option} with value undefined to messageList as false on init`, function(assert) {
+                this.reinit({
+                    [option]: undefined,
+                });
 
-            this.instance.option('showDayHeaders', false);
+                const messageList = this.getMessageList();
 
-            assert.strictEqual(messageList.option('showDayHeaders'), false, 'showDayHeaders is passed on runtime');
+                assert.strictEqual(messageList.option(option), false, `${option} with value undefined is passed as false on init`);
+            });
+
+            QUnit.test(`Chat should pass ${option} with value undefined to messageList as false on runtime`, function(assert) {
+                this.reinit({
+                    [option]: true,
+                });
+
+                this.instance.option(option, undefined);
+
+                const messageList = this.getMessageList();
+
+                assert.strictEqual(messageList.option(option), false, `${option} with value undefined is passed as false on runtime`);
+            });
         });
 
         QUnit.test('Chat should pass messageTemplate to messageList on init', function(assert) {
