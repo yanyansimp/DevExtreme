@@ -31,7 +31,6 @@ const TEXTEDITOR_INPUT_CLASS = 'dx-texteditor-input';
 
 type Properties = ChatProperties & {
   title: string;
-  showDayHeaders: boolean;
 };
 
 class Chat extends Widget<Properties> {
@@ -125,7 +124,7 @@ class Chat extends Widget<Properties> {
   }
 
   _renderMessageList(): void {
-    const { items = [], user, showDayHeaders } = this.option();
+    const { items = [], user, showDayHeaders = true } = this.option();
 
     const currentUserId = user?.id;
     const $messageList = $('<div>');
