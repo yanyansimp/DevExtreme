@@ -258,6 +258,9 @@
         "dxScheduler-editorLabelDescription": "Opis",
         "dxScheduler-editorLabelRecurrence": "Ponovi",
 
+        "dxScheduler-navigationPrevious": "Previous page",
+        "dxScheduler-navigationNext": "Next page",
+
         "dxScheduler-openAppointment": "Odpri dogodek",
 
         "dxScheduler-recurrenceNever": "Nikoli",

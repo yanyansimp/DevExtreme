@@ -258,6 +258,9 @@
         "dxScheduler-editorLabelDescription": "Kuvaus",
         "dxScheduler-editorLabelRecurrence": "Toista",
 
+        "dxScheduler-navigationPrevious": "Previous page",
+        "dxScheduler-navigationNext": "Next page",
+
         "dxScheduler-openAppointment": "Avaa tapaaminen",
 
         "dxScheduler-recurrenceNever": "Ei koskaan",

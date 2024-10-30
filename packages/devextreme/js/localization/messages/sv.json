@@ -258,6 +258,9 @@
         "dxScheduler-editorLabelDescription": "Beskrivning",
         "dxScheduler-editorLabelRecurrence": "Upprepa",
 
+        "dxScheduler-navigationPrevious": "Previous page",
+        "dxScheduler-navigationNext": "Next page",
+
         "dxScheduler-openAppointment": "Öppna avtalad tid",
 
         "dxScheduler-recurrenceNever": "Aldrig",

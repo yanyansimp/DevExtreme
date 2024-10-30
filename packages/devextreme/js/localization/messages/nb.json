@@ -258,6 +258,9 @@
         "dxScheduler-editorLabelDescription": "Beskrivelse",
         "dxScheduler-editorLabelRecurrence": "Gjenta",
 
+        "dxScheduler-navigationPrevious": "Previous page",
+        "dxScheduler-navigationNext": "Next page",
+
         "dxScheduler-openAppointment": "Åpen avtale",
 
         "dxScheduler-recurrenceNever": "Aldri",

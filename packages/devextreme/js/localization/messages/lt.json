@@ -258,6 +258,9 @@
         "dxScheduler-editorLabelDescription": "Aprašymas",
         "dxScheduler-editorLabelRecurrence": "Kartojimas",
 
+        "dxScheduler-navigationPrevious": "Previous page",
+        "dxScheduler-navigationNext": "Next page",
+
         "dxScheduler-openAppointment": "Atidaryti paskyrimą",
 
         "dxScheduler-recurrenceNever": "Niekada",

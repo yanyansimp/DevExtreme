@@ -258,6 +258,9 @@
         "dxScheduler-editorLabelDescription": "Descrição",
         "dxScheduler-editorLabelRecurrence": "Repetir",
 
+        "dxScheduler-navigationPrevious": "Previous page",
+        "dxScheduler-navigationNext": "Next page",
+
         "dxScheduler-openAppointment": "Abrir compromisso",
 
         "dxScheduler-recurrenceNever": "Nunca",

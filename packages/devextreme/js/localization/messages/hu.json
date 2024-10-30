@@ -258,6 +258,9 @@
         "dxScheduler-editorLabelDescription": "Leírás",
         "dxScheduler-editorLabelRecurrence": "Ismétlődés",
 
+        "dxScheduler-navigationPrevious": "Previous page",
+        "dxScheduler-navigationNext": "Next page",
+
         "dxScheduler-openAppointment": "Találkozó megnyitása",
 
         "dxScheduler-recurrenceNever": "Soha",

@@ -258,6 +258,9 @@
         "dxScheduler-editorLabelDescription": "Descriere",
         "dxScheduler-editorLabelRecurrence": "Repetă",
 
+        "dxScheduler-navigationPrevious": "Previous page",
+        "dxScheduler-navigationNext": "Next page",
+
         "dxScheduler-openAppointment": "Deschideți rezervarea",
 
         "dxScheduler-recurrenceNever": "Niciodată",

@@ -258,6 +258,9 @@
         "dxScheduler-editorLabelDescription": "説明",
         "dxScheduler-editorLabelRecurrence": "繰り返し",
 
+        "dxScheduler-navigationPrevious": "Previous page",
+        "dxScheduler-navigationNext": "Next page",
+
         "dxScheduler-openAppointment": "オープンの予定",
 
         "dxScheduler-recurrenceNever": "無効",

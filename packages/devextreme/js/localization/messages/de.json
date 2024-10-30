@@ -258,6 +258,9 @@
         "dxScheduler-editorLabelDescription": "Beschreibung",
         "dxScheduler-editorLabelRecurrence": "Wiederholen",
 
+        "dxScheduler-navigationPrevious": "Previous page",
+        "dxScheduler-navigationNext": "Next page",
+
         "dxScheduler-openAppointment": "Termin öffnen",
 
         "dxScheduler-recurrenceNever": "Nie",

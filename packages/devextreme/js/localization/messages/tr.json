@@ -258,6 +258,9 @@
         "dxScheduler-editorLabelDescription": "Açıklama",
         "dxScheduler-editorLabelRecurrence": "Tekrar",
 
+        "dxScheduler-navigationPrevious": "Previous page",
+        "dxScheduler-navigationNext": "Next page",
+
         "dxScheduler-openAppointment": "Randevu Aç",
 
         "dxScheduler-recurrenceNever": "Asla",
