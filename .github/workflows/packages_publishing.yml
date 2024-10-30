@@ -63,6 +63,7 @@ jobs:
       - name: Run deps scanner
         run: |
           ./deps-scanner/bin/Release/npmDepsScanner.exe scan_cache ${{ github.workspace }} reportGithub.json
+          cat reportGithub.json
           mkdir -p ./artifacts/deps-scanner
           cp reportGithub.json ./artifacts/deps-scanner/
 
