@@ -37,8 +37,8 @@ const toggleColumnNoBorderClass = ($cell, value, addWidgetPrefix): void => {
   $cell.toggleClass(addWidgetPrefix(CLASSES.columnNoBorder), value);
 };
 
-const toggleStickyColumnsClass = ($element, isStickyColumns, addWidgetPrefix): void => {
-  $element.toggleClass(addWidgetPrefix(CLASSES.stickyColumns), isStickyColumns);
+const toggleStickyColumnsClass = ($element, hasStickyColumns, addWidgetPrefix): void => {
+  $element.toggleClass(addWidgetPrefix(CLASSES.stickyColumns), hasStickyColumns);
 };
 
 const isStickyCellPinnedToLeft = (
@@ -79,6 +79,20 @@ const isStickyCellPinnedToRight = (
   return Math.round(cellRight) >= Math.round(calculatedCellRight);
 };
 
+const isStickyCellPinned = (
+  $cell: dxElementWrapper,
+  $container: dxElementWrapper,
+  addWidgetPrefix,
+): boolean => isStickyCellPinnedToLeft($cell, $container, addWidgetPrefix)
+  || isStickyCellPinnedToRight($cell, $container, addWidgetPrefix);
+
+const isFixedCellPinnedToLeft = (
+  $cell: dxElementWrapper,
+  $container: dxElementWrapper,
+  addWidgetPrefix,
+): boolean => $cell.hasClass(addWidgetPrefix(CLASSES.stickyColumnLeft))
+  || isStickyCellPinnedToLeft($cell, $container, addWidgetPrefix);
+
 const isFixedCellPinnedToRight = (
   $cell: dxElementWrapper,
   $container: dxElementWrapper,
@@ -98,6 +112,11 @@ const isFirstRightFixedCell = (
 ): boolean => $cell.hasClass(addWidgetPrefix(CLASSES.stickyColumnRight))
     && $cell.hasClass(addWidgetPrefix(CLASSES.stickyColumnBorderLeft));
 
+const isStickyCell = (
+  $cell: dxElementWrapper,
+  addWidgetPrefix,
+): boolean => $cell.hasClass(addWidgetPrefix(CLASSES.stickyColumn));
+
 const isFixedCell = (
   $cell: dxElementWrapper,
   addWidgetPrefix,
@@ -112,6 +131,22 @@ const getLeftFixedCells = ($cells: dxElementWrapper, addWidgetPrefix): dxElement
 const getRightFixedCells = ($cells: dxElementWrapper, addWidgetPrefix): dxElementWrapper => $cells
   // @ts-expect-error
   .filter((_, cell: HTMLElement) => $(cell).hasClass(addWidgetPrefix(CLASSES.stickyColumnRight)));
+
+const getFixedCellsPinnedToLeft = (
+  $cells: dxElementWrapper,
+  $container: dxElementWrapper,
+  addWidgetPrefix,
+): dxElementWrapper => $cells
+  // @ts-expect-error
+  .filter((_, cell: HTMLElement) => isFixedCellPinnedToLeft($(cell), $container, addWidgetPrefix));
+
+const getFixedCellsPinnedToRight = (
+  $cells: dxElementWrapper,
+  $container: dxElementWrapper,
+  addWidgetPrefix,
+): dxElementWrapper => $cells
+  // @ts-expect-error
+  .filter((_, cell: HTMLElement) => isFixedCellPinnedToRight($(cell), $container, addWidgetPrefix));
 
 const getNonFixedAndStickyCells = (
   $cells: dxElementWrapper,
@@ -269,6 +304,39 @@ const doesGroupCellEndInFirstColumn = ($groupCell): boolean => {
   return groupColSpanWithoutCommand === 1;
 };
 
+const getScrollPadding = (
+  $cells: dxElementWrapper,
+  $container: dxElementWrapper,
+  addWidgetPrefix,
+): {
+  left: number;
+  right: number;
+} => {
+  const left = getFixedCellsPinnedToLeft($cells, $container, addWidgetPrefix)
+    .toArray()
+    .reduce((sum, cell) => sum + cell.getBoundingClientRect().width, 0);
+  const right = getFixedCellsPinnedToRight($cells, $container, addWidgetPrefix)
+    .toArray()
+    .reduce((sum, cell) => sum + cell.getBoundingClientRect().width, 0);
+
+  return {
+    left,
+    right,
+  };
+};
+
+const setScrollPadding = (
+  $cells: dxElementWrapper,
+  $container: dxElementWrapper,
+  addWidgetPrefix,
+): void => {
+  const scrollPadding = getScrollPadding($cells, $container, addWidgetPrefix);
+  $container.css({
+    scrollPaddingLeft: scrollPadding.left,
+    scrollPaddingRight: scrollPadding.right,
+  });
+};
+
 export const GridCoreStickyColumnsDom = {
   toggleFirstHeaderClass,
   toggleColumnNoBorderClass,
@@ -280,7 +348,12 @@ export const GridCoreStickyColumnsDom = {
   getLeftFixedCells,
   getRightFixedCells,
   getNonFixedAndStickyCells,
+  getScrollPadding,
   noNeedToCreateResizingPoint,
   isFixedCellPinnedToRight,
   noNeedToCreateReorderingPoint,
+  isFixedCell,
+  isStickyCell,
+  isStickyCellPinned,
+  setScrollPadding,
 };

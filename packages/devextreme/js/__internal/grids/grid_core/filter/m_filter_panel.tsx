@@ -1,8 +1,8 @@
 /* eslint-disable max-classes-per-file */
 import $ from '@js/core/renderer';
-import { captionize } from '@js/core/utils/inflector';
 import { isDefined } from '@js/core/utils/type';
 import messageLocalization from '@js/localization/message';
+import inflector from '@ts/core/utils/m_inflector';
 import {
   getCaptionByOperation, getCurrentLookupValueText, getCurrentValueText,
   getCustomOperation, getField, getGroupValue, isCondition, isGroup,
@@ -201,7 +201,7 @@ export class FilterPanelView extends modules.View {
     const value = filterValue[2];
 
     if (customOperation) {
-      operationText = customOperation.caption || captionize(customOperation.name);
+      operationText = customOperation.caption || inflector.captionize(customOperation.name);
     } else if (value === null) {
       operationText = getCaptionByOperation(operation === '=' ? 'isblank' : 'isnotblank', options.filterOperationDescriptions);
     } else {

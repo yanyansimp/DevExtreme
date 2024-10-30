@@ -9541,6 +9541,27 @@ declare module DevExpress.ui {
     export type OptionChangedEvent = DevExpress.events.EventInfo<dxChat> &
       DevExpress.events.ChangedOptionInfo;
     export type Properties = dxChatOptions;
+    /**
+     * [descr:_ui_chat_TypingEndEvent]
+     */
+    export type TypingEndEvent = DevExpress.events.EventInfo<dxChat> & {
+      /**
+       * [descr:_ui_chat_TypingEndEvent.user]
+       */
+      readonly user?: User;
+    };
+    /**
+     * [descr:_ui_chat_TypingStartEvent]
+     */
+    export type TypingStartEvent = DevExpress.events.NativeEventInfo<
+      dxChat,
+      UIEvent & { target: HTMLInputElement }
+    > & {
+      /**
+       * [descr:_ui_chat_TypingStartEvent.user]
+       */
+      readonly user?: User;
+    };
   }
   /**
    * [descr:dxChatOptions]
@@ -9572,9 +9593,37 @@ declare module DevExpress.ui {
      */
     dataSource?: DevExpress.data.DataSource.DataSourceLike<DevExpress.ui.dxChat.Message> | null;
     /**
+     * [descr:dxChatOptions.errors]
+     */
+    errors?: Array<DevExpress.ui.dxChat.ChatError>;
+    /**
+     * [descr:dxChatOptions.showDayHeaders]
+     */
+    showDayHeaders?: boolean;
+    /**
+     * [descr:dxChatOptions.showUserName]
+     */
+    showUserName?: boolean;
+    /**
+     * [descr:dxChatOptions.showAvatar]
+     */
+    showAvatar?: boolean;
+    /**
+     * [descr:dxChatOptions.showMessageTimestamp]
+     */
+    showMessageTimestamp?: boolean;
+    /**
      * [descr:dxChatOptions.onMessageSend]
      */
     onMessageSend?: (e: DevExpress.ui.dxChat.MessageSendEvent) => void;
+    /**
+     * [descr:dxChatOptions.onTypingStart]
+     */
+    onTypingStart?: (e: DevExpress.ui.dxChat.TypingEndEvent) => void;
+    /**
+     * [descr:dxChatOptions.onTypingEnd]
+     */
+    onTypingEnd?: (e: DevExpress.ui.dxChat.TypingEndEvent) => void;
   }
   /**
    * [descr:dxCheckBox]
@@ -19390,6 +19439,10 @@ declare module DevExpress.ui {
      * [descr:dxHtmlEditorOptions.customizeModules]
      */
     customizeModules?: (config: any) => void;
+    /**
+     * [descr:dxHtmlEditorOptions.converter]
+     */
+    converter?: DevExpress.ui.dxHtmlEditor.Converter;
     /**
      * [descr:dxHtmlEditorOptions.focusStateEnabled]
      */
@@ -30694,6 +30747,19 @@ declare module DevExpress.ui.dxCardView {
 }
 declare module DevExpress.ui.dxChat {
   /**
+   * [descr:ChatError]
+   */
+  export type ChatError = {
+    /**
+     * [descr:ChatError.id]
+     */
+    id?: number | string;
+    /**
+     * [descr:ChatError.message]
+     */
+    message?: string;
+  };
+  /**
    * [descr:Message]
    */
   export type Message = {
@@ -30730,6 +30796,10 @@ declare module DevExpress.ui.dxChat {
      * [descr:User.avatarUrl]
      */
     avatarUrl?: string;
+    /**
+     * [descr:User.avatarAlt]
+     */
+    avatarAlt?: string;
   };
 }
 declare module DevExpress.ui.dxContextMenu {
@@ -30961,6 +31031,19 @@ declare module DevExpress.ui.dxGantt {
 }
 declare module DevExpress.ui.dxHtmlEditor {
   export type ContextMenuItem = dxHtmlEditorTableContextMenuItem;
+  /**
+   * [descr:Converter]
+   */
+  export type Converter = {
+    /**
+     * [descr:Converter.toHtml]
+     */
+    toHtml?: (value: string) => string;
+    /**
+     * [descr:Converter.fromHtml]
+     */
+    fromHtml?: (value: string) => string;
+  };
   export type ImageUploadTab = dxHtmlEditorImageUploadTabItem;
   export type ToolbarItem = dxHtmlEditorToolbarItem;
 }

@@ -3,14 +3,14 @@ import devices from '@js/core/devices';
 import $ from '@js/core/renderer';
 import { extend } from '@js/core/utils/extend';
 import { getHeight, getWidth } from '@js/core/utils/size';
-import { animation } from '@js/core/utils/support';
-// @ts-expect-error
 import { getNavigator } from '@js/core/utils/window';
 import messageLocalization from '@js/localization/message';
 import type { Properties as PublicProps } from '@js/ui/load_indicator';
 // @ts-expect-error
 import { current, isGeneric, isMaterialBased } from '@js/ui/themes';
 import Widget from '@ts/core/widget/widget';
+
+import supportUtils from '../core/utils/m_support';
 
 const navigator = getNavigator();
 
@@ -117,7 +117,7 @@ class LoadIndicator extends Widget<Properties> {
   _renderMarkup() {
     const { viaImage, indicatorSrc } = this.option();
 
-    if (animation() && !viaImage && !indicatorSrc) { // B236922
+    if (supportUtils.animation() && !viaImage && !indicatorSrc) { // B236922
       this._renderMarkupForAnimation();
     } else {
       this._renderMarkupForImage();
@@ -150,7 +150,7 @@ class LoadIndicator extends Widget<Properties> {
     if (indicatorSrc) {
       this._$wrapper.addClass(LOADINDICATOR_IMAGE_CLASS);
       this._$wrapper.css('backgroundImage', `url(${indicatorSrc})`);
-    } else if (animation()) {
+    } else if (supportUtils.animation()) {
       this._renderMarkupForAnimation();
     }
   }

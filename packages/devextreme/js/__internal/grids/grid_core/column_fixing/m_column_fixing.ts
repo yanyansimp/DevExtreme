@@ -15,6 +15,7 @@ import eventsEngine from '@js/events/core/events_engine';
 import { name as wheelEventName } from '@js/events/core/wheel';
 import messageLocalization from '@js/localization/message';
 import Scrollable from '@js/ui/scroll_view/ui.scrollable';
+import type { EditorFactory } from '@ts/grids/grid_core/editor_factory/m_editor_factory';
 
 import type { ColumnHeadersView } from '../column_headers/m_column_headers';
 import type {
@@ -492,13 +493,6 @@ const baseFixedColumns = <T extends ModuleType<ColumnsView>>(Base: T) => class B
     return this._fixedTableElement;
   }
 
-  private isFixedColumns() {
-    const fixedColumns = this.getFixedColumns();
-    const legacyMode = this.option('columnFixing.legacyMode');
-
-    return legacyMode === true && !!fixedColumns.length;
-  }
-
   protected _resizeCore() {
     super._resizeCore();
     this.synchronizeRows();
@@ -612,6 +606,13 @@ const baseFixedColumns = <T extends ModuleType<ColumnsView>>(Base: T) => class B
       paddingLeft: rtlEnabled ? width : '',
       paddingRight: !rtlEnabled ? width : '',
     });
+  }
+
+  public isFixedColumns(): boolean {
+    const fixedColumns = this.getFixedColumns();
+    const legacyMode = this.option('columnFixing.legacyMode');
+
+    return legacyMode === true && !!fixedColumns.length;
   }
 };
 
@@ -1024,8 +1025,10 @@ const rowsView = (Base: ModuleType<RowsView>) => class RowsViewFixedColumnsExten
     super._afterRowPrepared(e);
   }
 
-  public _scrollToElement($element) {
-    super._scrollToElement($element, this.getFixedColumnsOffset());
+  public _scrollToElement($element, offset?) {
+    const scrollOffset = this.isFixedColumns() ? this.getFixedColumnsOffset() : offset;
+
+    super._scrollToElement($element, scrollOffset);
   }
 };
 
@@ -1158,6 +1161,21 @@ const keyboardNavigation = (Base: ModuleType<KeyboardNavigationController>) => c
   }
 };
 
+const editorFactory = (Base: ModuleType<EditorFactory>) => class EditorFactoryFixedColumnsExtender extends Base {
+  protected getValidationOverlayContainer($cell: dxElementWrapper): dxElementWrapper {
+    const rowsViewModule = this.getView('rowsView');
+    // @ts-expect-error RowsView's method
+    const isFixedColumns = rowsViewModule.isFixedColumns();
+
+    if (isFixedColumns) {
+      return rowsViewModule.element() as dxElementWrapper;
+    }
+
+    // @ts-expect-error EditorFactory's method
+    return super.getValidationOverlayContainer($cell);
+  }
+};
+
 export const columnFixingModule = {
   defaultOptions() {
     return {
@@ -1192,6 +1210,7 @@ export const columnFixingModule = {
       columnsResizer,
       resizing,
       keyboardNavigation,
+      editorFactory,
     },
   },
 };

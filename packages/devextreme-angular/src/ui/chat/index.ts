@@ -24,7 +24,7 @@ import {
 
 import { Store } from 'devextreme/data';
 import DataSource, { Options as DataSourceOptions } from 'devextreme/data/data_source';
-import { DisposingEvent, InitializedEvent, Message, MessageSendEvent, OptionChangedEvent, User } from 'devextreme/ui/chat';
+import { ChatError, DisposingEvent, InitializedEvent, Message, MessageSendEvent, OptionChangedEvent, TypingEndEvent, TypingStartEvent, User } from 'devextreme/ui/chat';
 
 import DxChat from 'devextreme/ui/chat';
 
@@ -39,16 +39,20 @@ import {
     WatcherHelper
 } from 'devextreme-angular/core';
 
+import { DxiErrorModule } from 'devextreme-angular/ui/nested';
 import { DxiItemModule } from 'devextreme-angular/ui/nested';
 import { DxoAuthorModule } from 'devextreme-angular/ui/nested';
 import { DxoUserModule } from 'devextreme-angular/ui/nested';
 
+import { DxiChatErrorModule } from 'devextreme-angular/ui/chat/nested';
 import { DxiChatItemModule } from 'devextreme-angular/ui/chat/nested';
 import { DxoChatAuthorModule } from 'devextreme-angular/ui/chat/nested';
 import { DxoChatUserModule } from 'devextreme-angular/ui/chat/nested';
 
+import { DxiErrorComponent } from 'devextreme-angular/ui/nested';
 import { DxiItemComponent } from 'devextreme-angular/ui/nested';
 
+import { DxiChatErrorComponent } from 'devextreme-angular/ui/chat/nested';
 import { DxiChatItemComponent } from 'devextreme-angular/ui/chat/nested';
 
 
@@ -135,6 +139,19 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
 
 
     /**
+     * [descr:dxChatOptions.errors]
+    
+     */
+    @Input()
+    get errors(): Array<ChatError> {
+        return this._getOption('errors');
+    }
+    set errors(value: Array<ChatError>) {
+        this._setOption('errors', value);
+    }
+
+
+    /**
      * [descr:dxChatOptions.focusStateEnabled]
     
      */
@@ -213,6 +230,58 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
 
 
     /**
+     * [descr:dxChatOptions.showAvatar]
+    
+     */
+    @Input()
+    get showAvatar(): boolean {
+        return this._getOption('showAvatar');
+    }
+    set showAvatar(value: boolean) {
+        this._setOption('showAvatar', value);
+    }
+
+
+    /**
+     * [descr:dxChatOptions.showDayHeaders]
+    
+     */
+    @Input()
+    get showDayHeaders(): boolean {
+        return this._getOption('showDayHeaders');
+    }
+    set showDayHeaders(value: boolean) {
+        this._setOption('showDayHeaders', value);
+    }
+
+
+    /**
+     * [descr:dxChatOptions.showMessageTimestamp]
+    
+     */
+    @Input()
+    get showMessageTimestamp(): boolean {
+        return this._getOption('showMessageTimestamp');
+    }
+    set showMessageTimestamp(value: boolean) {
+        this._setOption('showMessageTimestamp', value);
+    }
+
+
+    /**
+     * [descr:dxChatOptions.showUserName]
+    
+     */
+    @Input()
+    get showUserName(): boolean {
+        return this._getOption('showUserName');
+    }
+    set showUserName(value: boolean) {
+        this._setOption('showUserName', value);
+    }
+
+
+    /**
      * [descr:dxChatOptions.user]
     
      */
@@ -284,6 +353,22 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
 
     /**
     
+     * [descr:dxChatOptions.onTypingEnd]
+    
+    
+     */
+    @Output() onTypingEnd: EventEmitter<TypingEndEvent>;
+
+    /**
+    
+     * [descr:dxChatOptions.onTypingStart]
+    
+    
+     */
+    @Output() onTypingStart: EventEmitter<TypingStartEvent>;
+
+    /**
+    
      * This member supports the internal infrastructure and is not intended to be used directly from your code.
     
      */
@@ -316,6 +401,13 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
     
      */
     @Output() elementAttrChange: EventEmitter<any>;
+
+    /**
+    
+     * This member supports the internal infrastructure and is not intended to be used directly from your code.
+    
+     */
+    @Output() errorsChange: EventEmitter<Array<ChatError>>;
 
     /**
     
@@ -364,6 +456,34 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
      * This member supports the internal infrastructure and is not intended to be used directly from your code.
     
      */
+    @Output() showAvatarChange: EventEmitter<boolean>;
+
+    /**
+    
+     * This member supports the internal infrastructure and is not intended to be used directly from your code.
+    
+     */
+    @Output() showDayHeadersChange: EventEmitter<boolean>;
+
+    /**
+    
+     * This member supports the internal infrastructure and is not intended to be used directly from your code.
+    
+     */
+    @Output() showMessageTimestampChange: EventEmitter<boolean>;
+
+    /**
+    
+     * This member supports the internal infrastructure and is not intended to be used directly from your code.
+    
+     */
+    @Output() showUserNameChange: EventEmitter<boolean>;
+
+    /**
+    
+     * This member supports the internal infrastructure and is not intended to be used directly from your code.
+    
+     */
     @Output() userChange: EventEmitter<User>;
 
     /**
@@ -383,6 +503,15 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
 
 
 
+    @ContentChildren(DxiChatErrorComponent)
+    get errorsChildren(): QueryList<DxiChatErrorComponent> {
+        return this._getOption('errors');
+    }
+    set errorsChildren(value) {
+        this.setContentChildren('errors', value, 'DxiChatErrorComponent');
+        this.setChildren('errors', value);
+    }
+
     @ContentChildren(DxiChatItemComponent)
     get itemsChildren(): QueryList<DxiChatItemComponent> {
         return this._getOption('items');
@@ -392,6 +521,16 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
         this.setChildren('items', value);
     }
 
+
+    @ContentChildren(DxiErrorComponent)
+    get errorsLegacyChildren(): QueryList<DxiErrorComponent> {
+        return this._getOption('errors');
+    }
+    set errorsLegacyChildren(value) {
+        if (this.checkContentChildren('errors', value, 'DxiErrorComponent')) {
+           this.setChildren('errors', value);
+        }
+    }
 
     @ContentChildren(DxiItemComponent)
     get itemsLegacyChildren(): QueryList<DxiItemComponent> {
@@ -420,17 +559,24 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
             { subscribe: 'initialized', emit: 'onInitialized' },
             { subscribe: 'messageSend', emit: 'onMessageSend' },
             { subscribe: 'optionChanged', emit: 'onOptionChanged' },
+            { subscribe: 'typingEnd', emit: 'onTypingEnd' },
+            { subscribe: 'typingStart', emit: 'onTypingStart' },
             { emit: 'accessKeyChange' },
             { emit: 'activeStateEnabledChange' },
             { emit: 'dataSourceChange' },
             { emit: 'disabledChange' },
             { emit: 'elementAttrChange' },
+            { emit: 'errorsChange' },
             { emit: 'focusStateEnabledChange' },
             { emit: 'heightChange' },
             { emit: 'hintChange' },
             { emit: 'hoverStateEnabledChange' },
             { emit: 'itemsChange' },
             { emit: 'rtlEnabledChange' },
+            { emit: 'showAvatarChange' },
+            { emit: 'showDayHeadersChange' },
+            { emit: 'showMessageTimestampChange' },
+            { emit: 'showUserNameChange' },
             { emit: 'userChange' },
             { emit: 'visibleChange' },
             { emit: 'widthChange' }
@@ -453,6 +599,7 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
     ngOnChanges(changes: SimpleChanges) {
         super.ngOnChanges(changes);
         this.setupChanges('dataSource', changes);
+        this.setupChanges('errors', changes);
         this.setupChanges('items', changes);
     }
 
@@ -464,6 +611,7 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
 
     ngDoCheck() {
         this._idh.doCheck('dataSource');
+        this._idh.doCheck('errors');
         this._idh.doCheck('items');
         this._watcherHelper.checkWatchers();
         super.ngDoCheck();
@@ -482,9 +630,11 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
 
 @NgModule({
   imports: [
+    DxiErrorModule,
     DxiItemModule,
     DxoAuthorModule,
     DxoUserModule,
+    DxiChatErrorModule,
     DxiChatItemModule,
     DxoChatAuthorModule,
     DxoChatUserModule,
@@ -496,9 +646,11 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
   ],
   exports: [
     DxChatComponent,
+    DxiErrorModule,
     DxiItemModule,
     DxoAuthorModule,
     DxoUserModule,
+    DxiChatErrorModule,
     DxiChatItemModule,
     DxoChatAuthorModule,
     DxoChatUserModule,

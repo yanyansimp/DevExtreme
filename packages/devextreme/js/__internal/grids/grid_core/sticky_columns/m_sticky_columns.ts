@@ -2,6 +2,7 @@
 import type { dxElementWrapper } from '@js/core/renderer';
 import $ from '@js/core/renderer';
 import { setWidth } from '@js/core/utils/size';
+import type { EditorFactory } from '@ts/grids/grid_core/editor_factory/m_editor_factory';
 
 import { HIDDEN_COLUMNS_WIDTH } from '../adaptivity/const';
 import type { ColumnHeadersView } from '../column_headers/m_column_headers';
@@ -111,21 +112,15 @@ const baseStickyColumns = <T extends ModuleType<ColumnsView>>(Base: T) => class 
     });
   }
 
-  protected _isStickyColumns(): boolean {
-    const stickyColumns = this._columnsController?.getStickyColumns();
-
-    return this.option('columnFixing.legacyMode') !== true && !!stickyColumns.length;
-  }
-
   protected _renderCore(options?) {
     super._renderCore(options);
 
     const $element = this.element();
-    const isStickyColumns = this._isStickyColumns();
+    const hasStickyColumns = this.hasStickyColumns();
 
     GridCoreStickyColumnsDom.toggleStickyColumnsClass(
       $element,
-      isStickyColumns,
+      hasStickyColumns,
       this.addWidgetPrefix.bind(this),
     );
   }
@@ -134,10 +129,10 @@ const baseStickyColumns = <T extends ModuleType<ColumnsView>>(Base: T) => class 
     const { column } = options;
     const { rowType } = options;
     const $cell = super._createCell(options);
-    const isStickyColumns = this._isStickyColumns();
+    const hasStickyColumns = this.hasStickyColumns();
     const rowIndex = rowType === 'header' ? options.rowIndex : null;
 
-    if (isStickyColumns) {
+    if (hasStickyColumns) {
       this.updateBorderCellClasses($cell, column, rowIndex);
 
       if (column.fixed) {
@@ -209,31 +204,37 @@ const baseStickyColumns = <T extends ModuleType<ColumnsView>>(Base: T) => class 
   }
 
   protected setColumnWidths(options): void {
-    const isStickyColumns = this._isStickyColumns();
+    const hasStickyColumns = this.hasStickyColumns();
     const columnsResizerController = this.getController('columnsResizer');
     const isColumnResizing = columnsResizerController?.isResizing();
 
     super.setColumnWidths(options);
 
-    if (isStickyColumns && isColumnResizing) {
+    if (hasStickyColumns && isColumnResizing) {
       this.setStickyOffsets();
     }
   }
 
   protected _resizeCore() {
-    const isStickyColumns = this._isStickyColumns();
+    const hasStickyColumns = this.hasStickyColumns();
     const adaptiveColumns = this.getController('adaptiveColumns');
     const hidingColumnsQueue = adaptiveColumns?.getHidingColumnsQueue();
 
     super._resizeCore.apply(this, arguments as any);
 
-    if (isStickyColumns) {
+    if (hasStickyColumns) {
       this.setStickyOffsets();
 
       if (hidingColumnsQueue?.length) {
         this._updateBorderClasses();
       }
     }
+  }
+
+  public hasStickyColumns(): boolean {
+    const stickyColumns = this._columnsController?.getStickyColumns();
+
+    return this.option('columnFixing.legacyMode') !== true && !!stickyColumns.length;
   }
 };
 
@@ -242,10 +243,20 @@ const columnHeadersView = (
 ) => class ColumnHeadersViewStickyColumnsExtender extends baseStickyColumns(Base) {
   protected setStickyOffsets() {
     const offsets: Record<number, Record<string, number>> = {};
-    const rowCount = this.getRowCount();
+    const rows = this._getRows();
 
-    for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-      super.setStickyOffsets(rowIndex, offsets);
+    for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+      const isFilterRow = rows?.[rowIndex]?.rowType === 'filter';
+
+      super.setStickyOffsets(rowIndex, isFilterRow ? undefined : offsets);
+    }
+  }
+
+  protected _resizeCore() {
+    super._resizeCore();
+
+    if (this.hasStickyColumns()) {
+      this.updateScrollPadding();
     }
   }
 
@@ -330,6 +341,17 @@ const columnHeadersView = (
     }
     return items;
   }
+
+  public updateScrollPadding(): void {
+    const $scrollContainer = $(this.getContent());
+    const $cells = $(this.getColumnElements());
+
+    GridCoreStickyColumnsDom.setScrollPadding(
+      $cells,
+      $scrollContainer,
+      this.addWidgetPrefix.bind(this),
+    );
+  }
 };
 
 const rowsView = (
@@ -345,7 +367,7 @@ const rowsView = (
     // @ts-expect-error
     const $detailCell: dxElementWrapper = super._renderMasterDetailCell($row, row, options);
 
-    if (this._isStickyColumns()) {
+    if (this.hasStickyColumns()) {
       $detailCell
         .addClass(this.addWidgetPrefix(CLASSES.stickyColumnLeft))
         // @ts-expect-error
@@ -366,17 +388,17 @@ const rowsView = (
   }
 
   protected _resizeCore() {
-    const isStickyColumns = this._isStickyColumns();
+    const hasStickyColumns = this.hasStickyColumns();
 
     super._resizeCore.apply(this, arguments as any);
 
-    if (isStickyColumns) {
+    if (hasStickyColumns) {
       this._updateMasterDetailWidths();
     }
   }
 
   protected _renderCellContent($cell, options, renderOptions) {
-    if (!isGroupRow(options) || !this._isStickyColumns()) {
+    if (!isGroupRow(options) || !this.hasStickyColumns()) {
       return super._renderCellContent($cell, options, renderOptions);
     }
 
@@ -399,6 +421,53 @@ const rowsView = (
       GridCoreStickyColumnsDom
         .addStickyColumnBorderRightClass($groupCell, this.addWidgetPrefix.bind(this));
     }
+  }
+
+  protected _handleScroll(e): void {
+    const hasStickyColumns = this.hasStickyColumns();
+
+    super._handleScroll(e);
+
+    if (hasStickyColumns) {
+      const editorFactoryController = this.getController('editorFactory');
+      const $focusOverlay = editorFactoryController.getFocusOverlay();
+      const hasFixedColumnsWithStickyPosition = !!this._columnsController
+        .getStickyColumns()
+        .filter((column) => column.fixedPosition === StickyPosition.Sticky).length;
+
+      if (!$focusOverlay?.hasClass(CLASSES.hidden)
+        && $focusOverlay?.hasClass(CLASSES.focusedFixedCell)) {
+        const $element = this.component.$element();
+        // @ts-expect-error
+        const $focusedCell = $element.find(`.${CLASSES.focused}`);
+        const isStickyCell = GridCoreStickyColumnsDom
+          .isStickyCell($focusedCell, this.addWidgetPrefix.bind(this));
+
+        if (isStickyCell) {
+          editorFactoryController.updateFocusOverlay($focusedCell);
+        }
+      }
+
+      if (hasFixedColumnsWithStickyPosition) {
+        // @ts-expect-error
+        this._columnHeadersView?.updateScrollPadding();
+      }
+    }
+  }
+
+  public _scrollToElement($element, offset?) {
+    let scrollOffset = offset;
+    const hasStickyColumns = this.hasStickyColumns();
+    const $row = $element?.closest('tr');
+    const $cells = $row?.children();
+    const $scrollContainer = this.getScrollable()?.container();
+
+    if (hasStickyColumns && $cells.length) {
+      scrollOffset = GridCoreStickyColumnsDom
+        .getScrollPadding($cells, $scrollContainer, this.addWidgetPrefix.bind(this));
+    }
+
+    super._scrollToElement($element, scrollOffset);
   }
 };
 
@@ -452,16 +521,16 @@ const columnsResizer = (Base: ModuleType<ColumnsResizerViewController>) => class
 
   protected _generatePointsByColumns(): void {
     // @ts-expect-error
-    const isStickyColumns = this._columnHeadersView?._isStickyColumns();
+    const hasStickyColumns = this._columnHeadersView?.hasStickyColumns();
 
-    super._generatePointsByColumns(isStickyColumns);
+    super._generatePointsByColumns(hasStickyColumns);
   }
 
   protected _pointCreated(point, cellsLength, columns) {
     // @ts-expect-error
-    const isStickyColumns = this._columnHeadersView?._isStickyColumns();
+    const hasStickyColumns = this._columnHeadersView?.hasStickyColumns();
     const result = super._pointCreated(point, cellsLength, columns);
-    const needToCheckPoint = isStickyColumns && cellsLength > 0;
+    const needToCheckPoint = hasStickyColumns && cellsLength > 0;
 
     if (needToCheckPoint && !result) {
       const column = columns[point.index - 1];
@@ -486,10 +555,10 @@ const columnsResizer = (Base: ModuleType<ColumnsResizerViewController>) => class
 const draggingHeader = (Base: ModuleType<DraggingHeaderViewController>) => class DraggingHeaderStickyColumnsExtender extends Base {
   public _generatePointsByColumns(options): any[] {
     // @ts-expect-error
-    const isStickyColumns = this._columnHeadersView?._isStickyColumns();
+    const hasStickyColumns = this._columnHeadersView?.hasStickyColumns();
     const { sourceLocation, sourceColumn } = options;
 
-    if (isStickyColumns && sourceLocation === 'headers') {
+    if (hasStickyColumns && sourceLocation === 'headers') {
       const columnFixedPosition = getColumnFixedPosition(this._columnsController, sourceColumn);
 
       switch (true) {
@@ -516,14 +585,14 @@ const draggingHeader = (Base: ModuleType<DraggingHeaderViewController>) => class
       }
     }
 
-    return super._generatePointsByColumns(options, isStickyColumns);
+    return super._generatePointsByColumns(options, hasStickyColumns);
   }
 
   protected _pointCreated(point, columns, location, sourceColumn) {
     // @ts-expect-error
-    const isStickyColumns = this._columnHeadersView._isStickyColumns();
+    const hasStickyColumns = this._columnHeadersView.hasStickyColumns();
     const $cells = this._columnHeadersView.getColumnElements();
-    const needToCheckPoint = isStickyColumns && location === 'headers' && $cells?.length
+    const needToCheckPoint = hasStickyColumns && location === 'headers' && $cells?.length
         && (!sourceColumn.fixed || sourceColumn.fixedPosition === StickyPosition.Sticky);
     const result = super._pointCreated(point, columns, location, sourceColumn);
 
@@ -540,6 +609,32 @@ const draggingHeader = (Base: ModuleType<DraggingHeaderViewController>) => class
   }
 };
 
+const editorFactory = (Base: ModuleType<EditorFactory>) => class EditorFactoryStickyColumnsExtender extends Base {
+  public updateFocusOverlay($element: dxElementWrapper, isHideBorder = false): void {
+    if (!isHideBorder) {
+      const scrollable = this._rowsView.getScrollable();
+      const $container = $(scrollable?.container());
+      const isFixedCell = GridCoreStickyColumnsDom
+        .isFixedCell($element, this.addWidgetPrefix.bind(this));
+      const isStickyCell = GridCoreStickyColumnsDom
+        .isStickyCell($element, this.addWidgetPrefix.bind(this));
+      const isStickyCellPinned = isStickyCell && $container.length
+        && GridCoreStickyColumnsDom
+          .isStickyCellPinned($element, $container, this.addWidgetPrefix.bind(this));
+
+      this._$focusOverlay.toggleClass(CLASSES.focusedFixedCell, isFixedCell);
+
+      if (isFixedCell && (!isStickyCell || isStickyCellPinned)) {
+        this._$focusOverlay.css('position', 'fixed');
+      } else {
+        this._$focusOverlay.css('position', '');
+      }
+    }
+
+    super.updateFocusOverlay($element, isHideBorder);
+  }
+};
+
 export const stickyColumnsModule = {
   extenders: {
     views: {
@@ -550,6 +645,7 @@ export const stickyColumnsModule = {
     controllers: {
       columnsResizer,
       draggingHeader,
+      editorFactory,
     },
   },
 };

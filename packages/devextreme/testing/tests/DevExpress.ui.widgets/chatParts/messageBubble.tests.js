@@ -4,11 +4,8 @@ import MessageBubble from '__internal/ui/chat/messagebubble';
 
 const moduleConfig = {
     beforeEach: function() {
-        const markup = '<div id="messageBubble"></div>';
-        $('#qunit-fixture').html(markup);
-
         const init = (options = {}) => {
-            this.instance = new MessageBubble($('#messageBubble'), options);
+            this.instance = new MessageBubble($('#component'), options);
             this.$element = $(this.instance.$element());
         };
 
@@ -40,6 +37,38 @@ QUnit.module('MessageBubble', moduleConfig, () => {
             this.instance.option('text', 'new message text');
 
             assert.strictEqual(this.$element.text(), 'new message text');
+        });
+
+        QUnit.test('template option should set message bubble content on init', function(assert) {
+            const template = (data, container) => {
+                $('<h1>').text(`template text: ${data.text}`).appendTo(container);
+            };
+
+            this.reinit({
+                template,
+                text: 'text'
+            });
+
+            const $bubbleContent = $(this.$element.children());
+
+            assert.strictEqual($bubbleContent.prop('tagName'), 'H1', 'content tag is correct');
+            assert.strictEqual($bubbleContent.text(), 'template text: text', 'content text is correct');
+        });
+
+        QUnit.test('template option should set message bubble content at runtime', function(assert) {
+            const template = (data, container) => {
+                $('<h1>').text(`template text: ${data.text}`).appendTo(container);
+            };
+            this.reinit({
+                text: 'text'
+            });
+
+            this.instance.option('template', template);
+
+            const $bubbleContent = $(this.$element.children());
+
+            assert.strictEqual($bubbleContent.prop('tagName'), 'H1', 'content tag is correct');
+            assert.strictEqual($bubbleContent.text(), 'template text: text', 'content text is correct');
         });
     });
 });
