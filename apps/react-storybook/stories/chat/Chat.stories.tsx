@@ -95,7 +95,7 @@ export const Overview: Story = {
         useEffect(() => {
             setMessages(items);
         }, [items]);
-        
+
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Chat
@@ -331,6 +331,41 @@ export const PopupIntegration: Story = {
                 >
                 </Chat>
             </Popup>
+        );
+    }
+}
+
+export const Customization: Story = {
+    args: {
+        width: 500,
+        height: 600,
+        showDayHeaders: true,
+        showAvatar: true,
+        showUserName: true,
+        showMessageTimestamp: true,
+    },
+    render: ({
+        width,
+        height,
+        showDayHeaders,
+        showAvatar,
+        showUserName,
+        showMessageTimestamp,
+    }) => {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Chat
+                    width={width}
+                    height={height}
+                    items={initialMessages}
+                    user={secondAuthor}
+                    showDayHeaders={showDayHeaders}
+                    showAvatar={showAvatar}
+                    showUserName={showUserName}
+                    showMessageTimestamp={showMessageTimestamp}
+                >
+                </Chat>
+            </div>
         );
     }
 }
