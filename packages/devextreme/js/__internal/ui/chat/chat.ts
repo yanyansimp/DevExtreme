@@ -13,7 +13,6 @@ import type {
   Properties as ChatProperties,
   TypingEndEvent,
   TypingStartEvent,
-  User,
 } from '@js/ui/chat';
 import type { OptionChanged } from '@ts/core/widget/types';
 import Widget from '@ts/core/widget/widget';
@@ -39,7 +38,6 @@ type Properties = ChatProperties & {
   messageTemplate: any;
   dayHeaderFormat?: Format;
   messageTimestampFormat?: Format;
-  typingUsers: User[];
 };
 
 class Chat extends Widget<Properties> {
@@ -165,7 +163,7 @@ class Chat extends Widget<Properties> {
       messageTemplate,
       dayHeaderFormat,
       messageTimestampFormat,
-      typingUsers,
+      typingUsers = [],
     } = this.option();
 
     const $messageList = $('<div>');

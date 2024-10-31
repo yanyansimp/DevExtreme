@@ -42,18 +42,22 @@ import {
 import { DxiErrorModule } from 'devextreme-angular/ui/nested';
 import { DxiItemModule } from 'devextreme-angular/ui/nested';
 import { DxoAuthorModule } from 'devextreme-angular/ui/nested';
+import { DxiTypingUserModule } from 'devextreme-angular/ui/nested';
 import { DxoUserModule } from 'devextreme-angular/ui/nested';
 
 import { DxiChatErrorModule } from 'devextreme-angular/ui/chat/nested';
 import { DxiChatItemModule } from 'devextreme-angular/ui/chat/nested';
 import { DxoChatAuthorModule } from 'devextreme-angular/ui/chat/nested';
+import { DxiChatTypingUserModule } from 'devextreme-angular/ui/chat/nested';
 import { DxoChatUserModule } from 'devextreme-angular/ui/chat/nested';
 
 import { DxiErrorComponent } from 'devextreme-angular/ui/nested';
 import { DxiItemComponent } from 'devextreme-angular/ui/nested';
+import { DxiTypingUserComponent } from 'devextreme-angular/ui/nested';
 
 import { DxiChatErrorComponent } from 'devextreme-angular/ui/chat/nested';
 import { DxiChatItemComponent } from 'devextreme-angular/ui/chat/nested';
+import { DxiChatTypingUserComponent } from 'devextreme-angular/ui/chat/nested';
 
 
 /**
@@ -295,6 +299,19 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
 
 
     /**
+     * [descr:dxChatOptions.typingUsers]
+    
+     */
+    @Input()
+    get typingUsers(): Array<User> {
+        return this._getOption('typingUsers');
+    }
+    set typingUsers(value: Array<User>) {
+        this._setOption('typingUsers', value);
+    }
+
+
+    /**
      * [descr:dxChatOptions.user]
     
      */
@@ -504,6 +521,13 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
      * This member supports the internal infrastructure and is not intended to be used directly from your code.
     
      */
+    @Output() typingUsersChange: EventEmitter<Array<User>>;
+
+    /**
+    
+     * This member supports the internal infrastructure and is not intended to be used directly from your code.
+    
+     */
     @Output() userChange: EventEmitter<User>;
 
     /**
@@ -541,6 +565,15 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
         this.setChildren('items', value);
     }
 
+    @ContentChildren(DxiChatTypingUserComponent)
+    get typingUsersChildren(): QueryList<DxiChatTypingUserComponent> {
+        return this._getOption('typingUsers');
+    }
+    set typingUsersChildren(value) {
+        this.setContentChildren('typingUsers', value, 'DxiChatTypingUserComponent');
+        this.setChildren('typingUsers', value);
+    }
+
 
     @ContentChildren(DxiErrorComponent)
     get errorsLegacyChildren(): QueryList<DxiErrorComponent> {
@@ -559,6 +592,16 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
     set itemsLegacyChildren(value) {
         if (this.checkContentChildren('items', value, 'DxiItemComponent')) {
            this.setChildren('items', value);
+        }
+    }
+
+    @ContentChildren(DxiTypingUserComponent)
+    get typingUsersLegacyChildren(): QueryList<DxiTypingUserComponent> {
+        return this._getOption('typingUsers');
+    }
+    set typingUsersLegacyChildren(value) {
+        if (this.checkContentChildren('typingUsers', value, 'DxiTypingUserComponent')) {
+           this.setChildren('typingUsers', value);
         }
     }
 
@@ -598,6 +641,7 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
             { emit: 'showDayHeadersChange' },
             { emit: 'showMessageTimestampChange' },
             { emit: 'showUserNameChange' },
+            { emit: 'typingUsersChange' },
             { emit: 'userChange' },
             { emit: 'visibleChange' },
             { emit: 'widthChange' }
@@ -622,6 +666,7 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
         this.setupChanges('dataSource', changes);
         this.setupChanges('errors', changes);
         this.setupChanges('items', changes);
+        this.setupChanges('typingUsers', changes);
     }
 
     setupChanges(prop: string, changes: SimpleChanges) {
@@ -634,6 +679,7 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
         this._idh.doCheck('dataSource');
         this._idh.doCheck('errors');
         this._idh.doCheck('items');
+        this._idh.doCheck('typingUsers');
         this._watcherHelper.checkWatchers();
         super.ngDoCheck();
         super.clearChangedOptions();
@@ -654,10 +700,12 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
     DxiErrorModule,
     DxiItemModule,
     DxoAuthorModule,
+    DxiTypingUserModule,
     DxoUserModule,
     DxiChatErrorModule,
     DxiChatItemModule,
     DxoChatAuthorModule,
+    DxiChatTypingUserModule,
     DxoChatUserModule,
     DxIntegrationModule,
     DxTemplateModule
@@ -670,10 +718,12 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
     DxiErrorModule,
     DxiItemModule,
     DxoAuthorModule,
+    DxiTypingUserModule,
     DxoUserModule,
     DxiChatErrorModule,
     DxiChatItemModule,
     DxoChatAuthorModule,
+    DxiChatTypingUserModule,
     DxoChatUserModule,
     DxTemplateModule
   ]
