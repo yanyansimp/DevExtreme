@@ -41,7 +41,7 @@ exports[`common initial render should be successfull 1`] = `
             <div
               aria-haspopup="dialog"
               aria-label="column-chooser"
-              class="dx-button dx-button-normal dx-button-mode-contained dx-widget dx-button-has-icon"
+              class="dx-widget dx-button dx-button-mode-contained dx-button-normal dx-button-has-icon"
               role="button"
               tabindex="0"
             >
@@ -63,7 +63,7 @@ exports[`common initial render should be successfull 1`] = `
           >
             <div
               aria-label="edit"
-              class="dx-button dx-button-normal dx-button-mode-contained dx-widget dx-button-has-text"
+              class="dx-widget dx-button dx-button-mode-contained dx-button-normal dx-button-has-text"
               role="button"
               tabindex="0"
             >
@@ -88,7 +88,7 @@ exports[`common initial render should be successfull 1`] = `
           >
             <div
               aria-label="revert"
-              class="dx-button dx-button-normal dx-button-mode-contained dx-widget dx-button-has-text"
+              class="dx-widget dx-button dx-button-mode-contained dx-button-normal dx-button-has-text"
               role="button"
               tabindex="-1"
             >
@@ -113,7 +113,7 @@ exports[`common initial render should be successfull 1`] = `
           >
             <div
               aria-label="save"
-              class="dx-button dx-button-normal dx-button-mode-contained dx-widget dx-button-has-text"
+              class="dx-widget dx-button dx-button-mode-contained dx-button-normal dx-button-has-text"
               role="button"
               tabindex="-1"
             >
@@ -136,7 +136,7 @@ exports[`common initial render should be successfull 1`] = `
             aria-expanded="false"
             aria-haspopup="true"
             aria-label="overflow"
-            class="dx-dropdownmenu dx-dropdownmenu-button dx-button dx-button-normal dx-button-mode-contained dx-widget dx-button-has-icon"
+            class="dx-widget dx-button dx-button-mode-contained dx-button-normal dx-button-has-icon dx-dropdownmenu dx-dropdownmenu-button"
             role="button"
             tabindex="0"
           >
@@ -161,10 +161,13 @@ exports[`common initial render should be successfull 1`] = `
       <div
         class="dx-gridcore-header-item"
       >
-        a
+        A
       </div>
     </div>
   </div>
+  <div
+    class="dx-gridcore-error-row"
+  />
   <div
     class="dx-scrollable dx-visibility-change-handler dx-scrollable-vertical dx-scrollable-simulated"
   >
@@ -183,27 +186,159 @@ exports[`common initial render should be successfull 1`] = `
             class="dx-gridcore-content"
             tabindex="0"
           >
-            
             <div
-              class="dx-cardview-card"
-              tabindex="0"
+              class="dx-cardview-content"
             >
               <div
-                class="dx-cardview-field"
+                class="dx-cardview-card"
                 tabindex="0"
               >
-                <span
-                  class="dx-cardview-field-name"
+                <div
+                  class="dx-toolbar dx-widget dx-visibility-change-handler dx-collection"
+                  role="toolbar"
                 >
-                  a
-                  : 
-                </span>
-                <span
-                  class="dx-cardview-field-name"
-                  style="text-align: left;"
+                  <div
+                    class="dx-toolbar-items-container"
+                  >
+                    <div
+                      class="dx-toolbar-before"
+                      role="presentation"
+                    >
+                      <div
+                        class="dx-item dx-toolbar-item dx-toolbar-button"
+                      >
+                        <div
+                          class="dx-item-content dx-toolbar-item-content"
+                        >
+                          <div
+                            aria-checked="false"
+                            aria-invalid="false"
+                            aria-readonly="false"
+                            class="dx-widget dx-checkbox"
+                            role="checkbox"
+                            tabindex="0"
+                          >
+                            <input
+                              type="hidden"
+                              value="false"
+                            />
+                            <div
+                              class="dx-checkbox-container"
+                            >
+                              <span
+                                class="dx-checkbox-icon"
+                              />
+                              
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="dx-item dx-toolbar-item dx-toolbar-button"
+                      >
+                        <div
+                          class="dx-item-content dx-toolbar-item-content"
+                        >
+                          <span>
+                            Card Header
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="dx-toolbar-center"
+                      role="presentation"
+                    />
+                    <div
+                      class="dx-toolbar-after"
+                      role="presentation"
+                    >
+                      <div
+                        class="dx-item dx-toolbar-item dx-toolbar-button"
+                      >
+                        <div
+                          class="dx-item-content dx-toolbar-item-content"
+                        >
+                          <div
+                            aria-label="save"
+                            class="dx-widget dx-button dx-button-mode-text dx-button-normal dx-button-has-icon"
+                            role="button"
+                            tabindex="0"
+                          >
+                            <div
+                              class="dx-button-content"
+                            >
+                              <i
+                                class="dx-icon dx-icon-save"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="dx-item dx-toolbar-item dx-toolbar-button"
+                      >
+                        <div
+                          class="dx-item-content dx-toolbar-item-content"
+                        >
+                          <div
+                            aria-label="edit"
+                            class="dx-widget dx-button dx-button-mode-text dx-button-normal dx-button-has-icon"
+                            role="button"
+                            tabindex="0"
+                          >
+                            <div
+                              class="dx-button-content"
+                            >
+                              <i
+                                class="dx-icon dx-icon-edit"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="dx-item dx-toolbar-item dx-toolbar-button"
+                      >
+                        <div
+                          class="dx-item-content dx-toolbar-item-content"
+                        >
+                          <div
+                            aria-label="remove"
+                            class="dx-widget dx-button dx-button-mode-text dx-button-normal dx-button-has-icon"
+                            role="button"
+                            tabindex="0"
+                          >
+                            <div
+                              class="dx-button-content"
+                            >
+                              <i
+                                class="dx-icon dx-icon-remove"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="dx-cardview-field"
+                  tabindex="0"
                 >
-                  a
-                </span>
+                  <span
+                    class="dx-cardview-field-name"
+                  >
+                    A
+                    : 
+                  </span>
+                  <span
+                    class="dx-cardview-field-name"
+                    style="text-align: left;"
+                  >
+                    a
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -227,49 +362,28 @@ exports[`common initial render should be successfull 1`] = `
   
   <div>
     <div
-      _feedbackhidetimeout="400"
-      _feedbackshowtimeout="30"
-      activestateenabled="false"
-      addwidgetclass="true"
-      aria="[object Object]"
-      aria-label="Page Navigation"
-      class="dx-widget dx-pager"
-      classes="dx-pager"
-      csstext=""
-      focusstateenabled="false"
-      hoverstateenabled="false"
-      name=""
+      aria-label="Page navigation"
+      class="dx-widget dx-pagination"
       role="navigation"
-      rootelementref="[object Object]"
-      rtlenabled="false"
-      visible="true"
     >
       <div
         class="dx-page-sizes"
       >
         <div
-          aria-label="Items per page: 2"
+          aria-label="Items per page: 5"
           class="dx-page-size dx-first-child"
           role="button"
           tabindex="0"
         >
-          2
+          5
         </div>
         <div
-          aria-label="Items per page: 6"
-          class="dx-page-size dx-selection"
-          role="button"
-          tabindex="0"
-        >
-          6
-        </div>
-        <div
-          aria-label="Items per page: 18"
+          aria-label="Items per page: 10"
           class="dx-page-size"
           role="button"
           tabindex="0"
         >
-          18
+          10
         </div>
       </div>
       <div
@@ -280,9 +394,8 @@ exports[`common initial render should be successfull 1`] = `
           class="dx-page-indexes"
         >
           <div
-            aria-current="page"
             aria-label="Page 1"
-            class="dx-page dx-selection"
+            class="dx-page"
             role="button"
             tabindex="0"
           >
