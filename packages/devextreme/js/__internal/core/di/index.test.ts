@@ -3,6 +3,8 @@
 /* eslint-disable @typescript-eslint/init-declarations */
 /* eslint-disable max-classes-per-file */
 /* eslint-disable class-methods-use-this */
+import { describe, expect, it } from '@jest/globals';
+
 import { DIContext } from './index';
 
 describe('basic', () => {

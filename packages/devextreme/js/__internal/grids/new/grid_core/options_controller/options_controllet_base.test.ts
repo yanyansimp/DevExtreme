@@ -1,4 +1,7 @@
 /* eslint-disable spellcheck/spell-checker */
+import {
+  describe, expect, it, jest,
+} from '@jest/globals';
 import { Component } from '@js/core/component';
 
 import { OptionsController } from './options_controller_base';

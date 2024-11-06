@@ -934,7 +934,7 @@ importers:
         specifier: 3.0.12
         version: 3.0.12(egfur7fnyqervmydw5qnwg7txm)
       '@jest/globals':
-        specifier: ^29.7.0
+        specifier: 29.7.0
         version: 29.7.0
       '@testcafe-community/axe':
         specifier: 3.5.0
@@ -16794,7 +16794,7 @@ snapshots:
 
   '@babel/code-frame@7.12.11':
     dependencies:
-      '@babel/highlight': 7.24.5
+      '@babel/highlight': 7.24.7
 
   '@babel/code-frame@7.24.2':
     dependencies:
@@ -17062,7 +17062,7 @@ snapshots:
 
   '@babel/helper-member-expression-to-functions@7.24.5':
     dependencies:
-      '@babel/types': 7.24.5
+      '@babel/types': 7.25.6
 
   '@babel/helper-member-expression-to-functions@7.24.8':
     dependencies:
@@ -17122,7 +17122,7 @@ snapshots:
 
   '@babel/helper-optimise-call-expression@7.22.5':
     dependencies:
-      '@babel/types': 7.24.5
+      '@babel/types': 7.25.6
 
   '@babel/helper-optimise-call-expression@7.24.7':
     dependencies:
@@ -17215,7 +17215,7 @@ snapshots:
     dependencies:
       '@babel/helper-function-name': 7.23.0
       '@babel/template': 7.24.0
-      '@babel/types': 7.24.5
+      '@babel/types': 7.25.6
 
   '@babel/helpers@7.24.5':
     dependencies:
@@ -18130,8 +18130,8 @@ snapshots:
       '@babel/helper-annotate-as-pure': 7.22.5
       '@babel/helper-module-imports': 7.24.7
       '@babel/helper-plugin-utils': 7.24.8
-      '@babel/plugin-syntax-jsx': 7.24.1(@babel/core@7.23.9)
-      '@babel/types': 7.24.5
+      '@babel/plugin-syntax-jsx': 7.24.7(@babel/core@7.23.9)
+      '@babel/types': 7.25.6
     transitivePeerDependencies:
       - supports-color
 
@@ -20062,13 +20062,15 @@ snapshots:
     transitivePeerDependencies:
       - '@parcel/core'
 
-  '@parcel/cache@2.12.0(@parcel/core@2.12.0(@swc/helpers@0.5.11))':
+  '@parcel/cache@2.12.0(@parcel/core@2.12.0(@swc/helpers@0.5.11))(@swc/helpers@0.5.11)':
     dependencies:
       '@parcel/core': 2.12.0(@swc/helpers@0.5.11)
       '@parcel/fs': 2.12.0(@parcel/core@2.12.0(@swc/helpers@0.5.11))(@swc/helpers@0.5.11)
       '@parcel/logger': 2.12.0
       '@parcel/utils': 2.12.0
       lmdb: 2.8.5
+    transitivePeerDependencies:
+      - '@swc/helpers'
 
   '@parcel/codeframe@2.12.0':
     dependencies:
@@ -20128,7 +20130,7 @@ snapshots:
   '@parcel/core@2.12.0(@swc/helpers@0.5.11)':
     dependencies:
       '@mischnic/json-sourcemap': 0.1.1
-      '@parcel/cache': 2.12.0(@parcel/core@2.12.0(@swc/helpers@0.5.11))
+      '@parcel/cache': 2.12.0(@parcel/core@2.12.0(@swc/helpers@0.5.11))(@swc/helpers@0.5.11)
       '@parcel/diagnostic': 2.12.0
       '@parcel/events': 2.12.0
       '@parcel/fs': 2.12.0(@parcel/core@2.12.0(@swc/helpers@0.5.11))(@swc/helpers@0.5.11)
@@ -20543,7 +20545,7 @@ snapshots:
 
   '@parcel/types@2.12.0(@parcel/core@2.12.0(@swc/helpers@0.5.11))(@swc/helpers@0.5.11)':
     dependencies:
-      '@parcel/cache': 2.12.0(@parcel/core@2.12.0(@swc/helpers@0.5.11))
+      '@parcel/cache': 2.12.0(@parcel/core@2.12.0(@swc/helpers@0.5.11))(@swc/helpers@0.5.11)
       '@parcel/diagnostic': 2.12.0
       '@parcel/fs': 2.12.0(@parcel/core@2.12.0(@swc/helpers@0.5.11))(@swc/helpers@0.5.11)
       '@parcel/package-manager': 2.12.0(@parcel/core@2.12.0(@swc/helpers@0.5.11))(@swc/helpers@0.5.11)
@@ -21484,7 +21486,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.23.9
       '@babel/preset-env': 7.23.9(@babel/core@7.23.9)
-      '@babel/types': 7.24.5
+      '@babel/types': 7.25.6
       '@storybook/csf': 0.1.6
       '@storybook/csf-tools': 7.6.19
       '@storybook/node-logger': 7.6.19
@@ -21624,10 +21626,10 @@ snapshots:
 
   '@storybook/csf-tools@7.6.19':
     dependencies:
-      '@babel/generator': 7.24.5
+      '@babel/generator': 7.25.6
       '@babel/parser': 7.23.9
       '@babel/traverse': 7.24.5
-      '@babel/types': 7.24.5
+      '@babel/types': 7.25.6
       '@storybook/csf': 0.1.6
       '@storybook/types': 7.6.19
       fs-extra: 11.2.0
@@ -23834,7 +23836,7 @@ snapshots:
   babel-plugin-jest-hoist@26.6.2:
     dependencies:
       '@babel/template': 7.24.0
-      '@babel/types': 7.24.5
+      '@babel/types': 7.25.6
       '@types/babel__core': 7.20.5
       '@types/babel__traverse': 7.20.5
 
@@ -27625,7 +27627,7 @@ snapshots:
 
   fork-ts-checker-webpack-plugin@8.0.0(typescript@4.9.5)(webpack@5.94.0(@swc/core@1.4.17(@swc/helpers@0.5.11))(esbuild@0.18.20)):
     dependencies:
-      '@babel/code-frame': 7.24.2
+      '@babel/code-frame': 7.24.7
       chalk: 4.1.2
       chokidar: 3.6.0
       cosmiconfig: 7.1.0
@@ -29874,7 +29876,7 @@ snapshots:
 
   jest-message-util@29.7.0:
     dependencies:
-      '@babel/code-frame': 7.24.2
+      '@babel/code-frame': 7.24.7
       '@jest/types': 29.6.3
       '@types/stack-utils': 2.0.3
       chalk: 4.1.2
@@ -30097,10 +30099,10 @@ snapshots:
   jest-snapshot@29.7.0:
     dependencies:
       '@babel/core': 7.23.9
-      '@babel/generator': 7.24.5
-      '@babel/plugin-syntax-jsx': 7.24.1(@babel/core@7.23.9)
-      '@babel/plugin-syntax-typescript': 7.24.1(@babel/core@7.23.9)
-      '@babel/types': 7.24.5
+      '@babel/generator': 7.25.6
+      '@babel/plugin-syntax-jsx': 7.24.7(@babel/core@7.23.9)
+      '@babel/plugin-syntax-typescript': 7.25.4(@babel/core@7.23.9)
+      '@babel/types': 7.25.6
       '@jest/expect-utils': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
@@ -32934,7 +32936,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.23.9
       '@babel/traverse': 7.24.5
-      '@babel/types': 7.24.5
+      '@babel/types': 7.25.6
       '@types/babel__core': 7.20.5
       '@types/babel__traverse': 7.20.5
       '@types/doctrine': 0.0.9

@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { describe, expect, it } from '@jest/globals';
+
 import { CardView } from './widget_base';
 
 describe('common', () => {

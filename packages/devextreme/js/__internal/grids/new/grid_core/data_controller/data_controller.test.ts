@@ -1,5 +1,7 @@
 /* eslint-disable spellcheck/spell-checker */
 /* eslint-disable @typescript-eslint/dot-notation */
+import { describe, expect, it } from '@jest/globals';
+
 import { OptionsControllerMock } from '../options_controller/options_controller.mock';
 import { DataController } from './data_controller';
 
