@@ -1,4 +1,4 @@
-import PagerWidget from '@js/ui/pager';
+import PagerWidget from '@js/ui/pagination';
 
 import { InfernoWrapper } from './widget_wrapper';
 
@@ -19,7 +19,6 @@ interface PagerProps {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class Pager extends InfernoWrapper<PagerProps, any> {
-  // @ts-expect-error
   protected getComponentFabric(): typeof PagerWidget {
     return PagerWidget;
   }

@@ -431,6 +431,7 @@ export function processModules(
     each(moduleTypes, (name, moduleType) => {
       // eslint-disable-next-line new-cap
       const moduleItem = diContext.get(moduleType);
+      // @ts-expect-error
       moduleItem.name = name;
       registerPublicMethods(componentInstance, name, moduleItem);
 
