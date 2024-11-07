@@ -1,5 +1,5 @@
 import {
-  afterAll, afterEach, describe, expect, it, jest, test,
+  afterEach, beforeEach, describe, expect, it, jest, test,
 } from '@jest/globals';
 import config from '@js/core/config';
 import errors from '@js/core/errors';
@@ -141,16 +141,16 @@ describe('license token', () => {
 
 describe('version mismatch', () => {
   const CORRECT_VERSION = '24.2.3';
-  const errorsLogMock = jest.spyOn(errors, 'log').mockImplementation(() => {});
-  setLicenseCheckSkipCondition(false);
+  let errorsLogMock = jest.spyOn(errors, 'log').mockImplementation(() => {});
 
-  afterEach(() => {
-    clearAssertedVersions();
-    errorsLogMock.mockReset();
+  beforeEach(() => {
+    errorsLogMock = jest.spyOn(errors, 'log').mockImplementation(() => {});
+    setLicenseCheckSkipCondition(false);
   });
 
-  afterAll(() => {
+  afterEach(() => {
     jest.restoreAllMocks();
+    clearAssertedVersions();
   });
 
   test('Perform license check if versions match', () => {
@@ -289,15 +289,15 @@ describe('license check', () => {
   const TOKEN_MISSING_FIELD_3 = 'ewogICJmb3JtYXQiOiAxLAogICJjdXN0b21lcklkIjogImIxMTQwYjQ2LWZkZTEtNDFiZC1hMjgwLTRkYjlmOGU3ZDliZCIKfQ==.resgTqmazrorRNw7mmtV31XQnmTSw0uLEArsmpzCjWMQJLocBfAjpFvKBf+SAG9q+1iOSFySj64Uv2xBVqHnyeNVBRbouOKOnAB8RpkKvN4sc5SDc8JAG5TkwPVSzK/VLBpQxpqbxlcrRfHwz9gXqQoPt4/ZVATn285iw3DW0CU=';
   const TOKEN_UNSUPPORTED_VERSION = 'ewogICJmb3JtYXQiOiAyLAogICJjdXN0b21lcklkIjogImIxMTQwYjQ2LWZkZTEtNDFiZC1hMjgwLTRkYjlmOGU3ZDliZCIsCiAgIm1heFZlcnNpb25BbGxvd2VkIjogMjMxCn0=.tTBymZMROsYyMiP6ldXFqGurbzqjhSQIu/pjyEUJA3v/57VgToomYl7FVzBj1asgHpadvysyTUiX3nFvPxbp166L3+LB3Jybw9ueMnwePu5vQOO0krqKLBqRq+TqHKn7k76uYRbkCIo5UajNfzetHhlkin3dJf3x2K/fcwbPW5A=';
 
-  setLicenseCheckSkipCondition(false);
-  jest.spyOn(errors, 'log').mockImplementation(() => {});
-  const trialPanelSpy = jest.spyOn(trialPanel, 'renderTrialPanel');
+  let trialPanelSpy = jest.spyOn(trialPanel, 'renderTrialPanel');
 
-  afterEach(() => {
-    trialPanelSpy.mockReset();
+  beforeEach(() => {
+    jest.spyOn(errors, 'log').mockImplementation(() => {});
+    trialPanelSpy = jest.spyOn(trialPanel, 'renderTrialPanel');
+    setLicenseCheckSkipCondition(false);
   });
 
-  afterAll(() => {
+  afterEach(() => {
     jest.restoreAllMocks();
   });
 
@@ -467,16 +467,15 @@ describe('license check', () => {
 });
 
 describe('internal license check', () => {
-  setLicenseCheckSkipCondition(false);
-  jest.spyOn(errors, 'log').mockImplementation(() => {});
+  let trialPanelSpy = jest.spyOn(trialPanel, 'renderTrialPanel');
 
-  const trialPanelSpy = jest.spyOn(trialPanel, 'renderTrialPanel');
-
-  afterEach(() => {
-    trialPanelSpy.mockReset();
+  beforeEach(() => {
+    jest.spyOn(errors, 'log').mockImplementation(() => {});
+    trialPanelSpy = jest.spyOn(trialPanel, 'renderTrialPanel');
+    setLicenseCheckSkipCondition(false);
   });
 
-  afterAll(() => {
+  afterEach(() => {
     jest.restoreAllMocks();
   });
 

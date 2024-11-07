@@ -185,7 +185,6 @@
     "yargs": "17.7.2"
   },
   "scripts": {
-    "jest-internal": "jest --config jest.config.internal.js",
     "clean": "gulp clean",
     "lint": "npm-run-all -p -c lint-js lint-ts lint-renovation lint-dts lint-texts",
     "lint-js": "eslint --quiet --ext .js .",
