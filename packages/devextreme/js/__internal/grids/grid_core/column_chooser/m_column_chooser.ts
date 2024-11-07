@@ -152,6 +152,7 @@ export class ColumnChooserView extends ColumnsView {
           }
         },
         container: columnChooserOptions.container,
+        _loopFocus: true,
       };
     }
 
