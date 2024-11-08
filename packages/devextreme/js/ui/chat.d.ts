@@ -1,4 +1,8 @@
 import {
+    Format,
+} from '../localization';
+
+import {
     UserDefinedElement,
     DxElement,
 } from '../core/element';
@@ -212,6 +216,12 @@ export interface dxChatOptions extends WidgetOptions<dxChat> {
     dataSource?: DataSourceLike<Message> | null;
     /**
      * @docid
+     * @default 'shortdate'
+     * @public
+     */
+    dayHeaderFormat?: Format;
+    /**
+     * @docid
      * @default true
      * @public
      */
@@ -229,6 +239,12 @@ export interface dxChatOptions extends WidgetOptions<dxChat> {
      * @public
      */
     messageTemplate?: ((data: MessageTemplateData, messageBubbleElement: DxElement) => string | UserDefinedElement) | template | null;
+    /**
+     * @docid
+     * @default 'shorttime'
+     * @public
+     */
+    messageTimestampFormat?: Format;
     /**
      * @docid
      * @default []
