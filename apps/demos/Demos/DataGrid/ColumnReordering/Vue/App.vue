@@ -1,15 +1,12 @@
 <template>
   <div>
-    <DxTreeList
-      id="employees"
+    <DxDataGrid
+      id="gridContainer"
       :data-source="employees"
       key-expr="ID"
-      parent-id-expr="Head_ID"
       :allow-column-reordering="true"
       :column-auto-width="true"
       :show-borders="true"
-      :show-row-lines="true"
-      :expanded-row-keys="expandedRowKeys"
     >
       <DxColumnFixing :enabled="true"/>
       <DxColumn
@@ -25,7 +22,7 @@
         :width="190"
         data-field="Address"
         :fixed="true"
-        fixed-position="sticky"
+        fixedPosition="sticky"
       />
       <DxColumn data-field="Zipcode"/>
       <DxColumn
@@ -39,32 +36,35 @@
       <DxColumn
         data-field="City"
         :fixed="true"
-        fixed-position="right"
+        fixedPosition="right"
       />
       <DxColumn
         data-field="State"
         :fixed="true"
-        fixed-position="right"
+        fixedPosition="right"
       />
       <DxColumn data-field="Department"/>
       <DxColumn data-field="HomePhone"/>
       <DxColumn data-field="MobilePhone"/>
       <DxColumn data-field="Skype"/>
       <DxColumn data-field="Email"/>
-    </DxTreeList>
+    </DxDataGrid>
   </div>
 </template>
 <script setup lang="ts">
-import { DxTreeList, DxColumn, DxColumnFixing } from 'devextreme-vue/tree-list';
-import { Employee, employees } from './data.ts';
+import {
+  DxDataGrid,
+  DxColumn,
+  DxColumnFixing,
+} from 'devextreme-vue/data-grid';
+import { employees, Employee } from './data.ts';
 
-const expandedRowKeys = [1];
 function calculateCellValue(data: Employee) {
   return [data.Title, data.FirstName, data.LastName].join(' ');
 }
 </script>
 <style scoped>
-#employees {
-  max-height: 440px;
+#gridContainer {
+  height: 440px;
 }
 </style>

@@ -1,13 +1,10 @@
-<dx-tree-list
-  id="employees"
+<dx-data-grid
+  id="gridContainer"
   [dataSource]="employees"
   keyExpr="ID"
-  parentIdExpr="Head_ID"
   [allowColumnReordering]="true"
   [columnAutoWidth]="true"
   [showBorders]="true"
-  [showRowLines]="true"
-  [expandedRowKeys]="[1]"
 >
   <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
   <dxi-column
@@ -40,4 +37,4 @@
   <dxi-column dataField="MobilePhone"></dxi-column>
   <dxi-column dataField="Skype"></dxi-column>
   <dxi-column dataField="Email"></dxi-column>
-</dx-tree-list>
+</dx-data-grid>

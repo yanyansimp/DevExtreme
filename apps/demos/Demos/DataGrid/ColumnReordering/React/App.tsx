@@ -1,20 +1,18 @@
 import React from 'react';
-import { TreeList, Column, ColumnFixing } from 'devextreme-react/tree-list';
-import { employees } from './data.js';
+import DataGrid, { Column, ColumnFixing } from 'devextreme-react/data-grid';
 
-const expandedRowKeys = [1];
-const calculateCellValue = (data) => [data.Title, data.FirstName, data.LastName].join(' ');
+import { Employee, employees } from './data.ts';
+
+const calculateCellValue = (data: Employee) => [data.Title, data.FirstName, data.LastName].join(' ');
+
 const App = () => (
-  <TreeList
-    id="employees"
+  <DataGrid
+    id="gridContainer"
     dataSource={employees}
     keyExpr="ID"
-    parentIdExpr="Head_ID"
     allowColumnReordering={true}
     columnAutoWidth={true}
     showBorders={true}
-    showRowLines={true}
-    defaultExpandedRowKeys={expandedRowKeys}
   >
     <ColumnFixing enabled={true} />
     <Column
@@ -32,7 +30,7 @@ const App = () => (
       fixed={true}
       fixedPosition="sticky"
     />
-    <Column dataField="Zipcode" />
+    <Column dataField="Zipcode"/>
     <Column
       dataField="HireDate"
       dataType="date"
@@ -40,6 +38,7 @@ const App = () => (
     <Column
       dataField="Position"
       alignment="right"
+
     />
     <Column
       dataField="City"
@@ -56,6 +55,7 @@ const App = () => (
     <Column dataField="MobilePhone" />
     <Column dataField="Skype" />
     <Column dataField="Email" />
-  </TreeList>
+  </DataGrid>
 );
+
 export default App;

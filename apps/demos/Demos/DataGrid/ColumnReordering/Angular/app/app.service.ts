@@ -1,25 +1,44 @@
-export interface Employee {
+import { Injectable } from '@angular/core';
+
+export class Employee {
   ID: number;
+
   Head_ID: number;
+
   FirstName: string;
+
   LastName: string;
+
   Position: string;
+
   BirthDate: string;
+
   HireDate: string;
+
   Title: string;
+
   Address: string;
+
   City: string;
+
   State: string;
+
   Zipcode: number;
+
   Email: string;
+
   Skype: string;
+
   HomePhone: string;
+
   DepartmentID: number;
+
   Department: string;
+
   MobilePhone: string;
 }
 
-export const employees: Employee[] = [{
+const employees: Employee[] = [{
     ID: 1,
     Head_ID: 0,
     FirstName: 'John',
@@ -211,3 +230,11 @@ export const employees: Employee[] = [{
     MobilePhone: '(310) 555-7276',
   }];
   
+
+
+@Injectable()
+export class Service {
+  getEmployees(): Employee[] {
+    return employees;
+  }
+}

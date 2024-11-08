@@ -1,16 +1,13 @@
 $(() => {
-  $('#employees').dxTreeList({
+  $('#gridContainer').dxDataGrid({
     dataSource: employees,
     keyExpr: 'ID',
-    parentIdExpr: 'Head_ID',
     allowColumnReordering: true,
     columnAutoWidth: true,
     showBorders: true,
     columnFixing: {
       enabled: true,
     },
-    showRowLines: true,
-    expandedRowKeys: [1],
     columns: [{
       caption: 'Employee',
       fixed: true,
@@ -18,7 +15,7 @@ $(() => {
         return [data.Title,
           data.FirstName, data.LastName]
           .join(' ');
-      }, 
+      },
       }, {
         dataField: 'BirthDate',
         dataType: 'date',
@@ -41,7 +38,8 @@ $(() => {
         dataField: 'State',
         fixed: true,
         fixedPosition: 'right',
-      }, 'Department', 'HomePhone', 'MobilePhone', 'Skype', 'Email',
-    ],
+      },
+      'Department', 'HomePhone', 'MobilePhone', 'Skype', 'Email',
+    ]
   });
 });
