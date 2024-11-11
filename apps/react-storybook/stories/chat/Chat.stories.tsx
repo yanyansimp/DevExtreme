@@ -391,6 +391,51 @@ export const Customization: Story = {
     }
 }
 
+const formattingOptions = ['shortdate', 'shorttime', 'yyyy-mm-dd hh:mm:ss', 'hh:mm:ss', 'longdate', 'longtime', 'invalid format', null];
+
+const formattingControlMappings = Object.fromEntries(formattingOptions.map(option => [option, option])); 
+
+const formattingCommonProperties = {
+    control: 'select',
+    options: formattingOptions,
+    mapping: formattingControlMappings,
+};
+
+export const Formatting: Story = {
+    args: {
+        dayHeaderFormat: 'shortdate',
+        messageTimestampFormat: 'shorttime',
+    },
+    argTypes: {
+        dayHeaderFormat: {
+            ...formattingCommonProperties,
+            defaultValue: 'shortdate',
+        },
+        messageTimestampFormat: {
+            ...formattingCommonProperties,
+            defaultValue: 'shorttime',
+        },
+    },
+    render: ({
+        dayHeaderFormat,
+        messageTimestampFormat,
+    }) => {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Chat
+                    width={500}
+                    height={500}
+                    items={initialMessages}
+                    user={secondAuthor}
+                    dayHeaderFormat={dayHeaderFormat}
+                    messageTimestampFormat={messageTimestampFormat}
+                >
+                </Chat>
+            </div>
+        );
+    }
+}
+
 export const TypingUsers: Story = {
     args: {
         typingUsers: 'One user typing',
