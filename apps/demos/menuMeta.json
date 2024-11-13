@@ -1559,7 +1559,7 @@
             "DemoType": "Web"
           },
           {
-            "Title": "Column Fixing",
+            "Title": "Fixed and Sticky Columns",
             "Name": "ColumnFixing",
             "Equivalents": "fixed column, frozen column, pinned column",
             "Widget": "TreeList",
