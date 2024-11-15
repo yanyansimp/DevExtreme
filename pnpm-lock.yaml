@@ -45,8 +45,8 @@ importers:
         specifier: 6.0.2
         version: 6.0.2(@angular/compiler@17.3.12(@angular/core@17.3.12(rxjs@7.8.1)(zone.js@0.14.10)))(@angular/core@17.3.12(rxjs@7.8.1)(zone.js@0.14.10))(tslint@6.1.3(typescript@5.4.5))
       devextreme-internal-tools:
-        specifier: 16.0.0-beta.10
-        version: 16.0.0-beta.10
+        specifier: 16.0.0-beta.12
+        version: 16.0.0-beta.12
       http-server:
         specifier: 14.1.1
         version: 14.1.1
@@ -7927,8 +7927,8 @@ packages:
   devextreme-cldr-data@1.0.3:
     resolution: {integrity: sha512-xd+uWv1KzEhr+ZH/MOWfDei3GFz+NAYyKUR9HgjM9BBwPel7PpMElYp4whM+PtAjziBaTssQnA//ob5c3BovTA==}
 
-  devextreme-internal-tools@16.0.0-beta.10:
-    resolution: {integrity: sha512-5eVdSDDXcpZhj4se88tPLc0kc5BL8bPHd6FacBViod5EEj+AhJpHYUtDa6C+AWyWcc2qBS/Pk96eMRglBu3lvw==}
+  devextreme-internal-tools@16.0.0-beta.12:
+    resolution: {integrity: sha512-+lifFx/l2BNv0COLhUG5E3KGm9Lj5SONxp/n4LjDCiPVrxhAGxOAeDByv9ZFuiaq1dqupvRSzIHhYeeigu8aDA==}
     engines: {node: '>=12.0.0'}
     hasBin: true
 
@@ -26018,7 +26018,7 @@ snapshots:
 
   devextreme-cldr-data@1.0.3: {}
 
-  devextreme-internal-tools@16.0.0-beta.10:
+  devextreme-internal-tools@16.0.0-beta.12:
     dependencies:
       dasherize: 2.0.0
       deepmerge: 4.3.1
@@ -29751,7 +29751,7 @@ snapshots:
       jest-environment-jsdom: 26.6.2
       jest-environment-node: 26.6.2
       jest-get-type: 26.3.0
-      jest-jasmine2: 26.6.3
+      jest-jasmine2: 26.6.3(ts-node@10.9.2(@swc/core@1.4.17)(@types/node@20.12.8)(typescript@5.4.5))
       jest-regex-util: 26.0.0
       jest-resolve: 26.6.2
       jest-util: 26.6.2
@@ -30049,7 +30049,7 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  jest-jasmine2@26.6.3:
+  jest-jasmine2@26.6.3(ts-node@10.9.2(@swc/core@1.4.17)(@types/node@20.12.8)(typescript@5.4.5)):
     dependencies:
       '@babel/traverse': 7.24.5
       '@jest/environment': 26.6.2
@@ -30070,7 +30070,11 @@ snapshots:
       pretty-format: 26.6.2
       throat: 5.0.0
     transitivePeerDependencies:
+      - bufferutil
+      - canvas
       - supports-color
+      - ts-node
+      - utf-8-validate
 
   jest-leak-detector@26.6.2:
     dependencies:
