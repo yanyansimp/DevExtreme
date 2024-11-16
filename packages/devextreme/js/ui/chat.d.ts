@@ -1,4 +1,8 @@
 import {
+    Format,
+} from '../localization';
+
+import {
     UserDefinedElement,
     DxElement,
 } from '../core/element';
@@ -86,19 +90,16 @@ export type User = {
     id?: number | string;
     /**
      * @docid
-     * @default ''
      * @public
      */
     name?: string;
     /**
      * @docid
-     * @default ''
      * @public
      */
     avatarUrl?: string;
     /**
      * @docid
-     * @default undefined
      * @public
      */
     avatarAlt?: string;
@@ -117,7 +118,6 @@ export type Alert = {
     id?: number | string;
     /**
      * @docid
-     * @default ''
      * @public
      */
     message?: string;
@@ -136,28 +136,19 @@ export type Message = {
     id?: number | string;
     /**
      * @docid
-     * @default undefined
      * @public
      */
     timestamp?: Date | number | string;
     /**
      * @docid
-     * @default undefined
      * @public
      */
     author?: User;
     /**
      * @docid
-     * @default ''
      * @public
      */
     text?: string;
-    /**
-     * @docid
-     * @default false
-     * @public
-     */
-    typing?: boolean;
 };
 
 /** @public */
@@ -212,13 +203,19 @@ export interface dxChatOptions extends WidgetOptions<dxChat> {
     dataSource?: DataSourceLike<Message> | null;
     /**
      * @docid
+     * @default 'shortdate'
+     * @public
+     */
+    dayHeaderFormat?: Format;
+    /**
+     * @docid
      * @default true
      * @public
      */
     reloadOnChange?: boolean;
     /**
      * @docid
-     * @default undefined
+     * @default []
      * @public
      */
     alerts?: Array<Alert>;
@@ -228,7 +225,13 @@ export interface dxChatOptions extends WidgetOptions<dxChat> {
      * @type_function_return string|Element|jQuery
      * @public
      */
-    messageTemplate?: ((data: MessageTemplateData, messageBubbleElement: DxElement) => string | UserDefinedElement) | template | null;
+    messageTemplate?: template | null | ((data: MessageTemplateData, messageBubbleElement: DxElement) => string | UserDefinedElement);
+    /**
+     * @docid
+     * @default 'shorttime'
+     * @public
+     */
+    messageTimestampFormat?: Format;
     /**
      * @docid
      * @default []
@@ -266,7 +269,7 @@ export interface dxChatOptions extends WidgetOptions<dxChat> {
      * @action
      * @public
      */
-    onMessageEntered?: ((e: MessageEnteredEvent) => void);
+    onMessageEntered?: ((e: MessageEnteredEvent) => void) | undefined;
     /**
      * @docid
      * @default undefined
@@ -274,7 +277,7 @@ export interface dxChatOptions extends WidgetOptions<dxChat> {
      * @action
      * @public
      */
-    onTypingStart?: ((e: TypingEndEvent) => void);
+    onTypingStart?: ((e: TypingEndEvent) => void) | undefined ;
     /**
      * @docid
      * @default undefined
@@ -282,7 +285,7 @@ export interface dxChatOptions extends WidgetOptions<dxChat> {
      * @action
      * @public
      */
-    onTypingEnd?: ((e: TypingEndEvent) => void);
+    onTypingEnd?: ((e: TypingEndEvent) => void) | undefined;
 }
 
 /**

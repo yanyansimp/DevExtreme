@@ -328,6 +328,10 @@ class SchedulerAppointments extends CollectionWidget {
     }
   }
 
+  _refreshActiveDescendant() {
+    // override to do nothing
+  }
+
   _attachAppointmentsEvents() {
     (this as any)._attachClickEvent();
     (this as any)._attachHoldEvent();
@@ -619,6 +623,7 @@ class SchedulerAppointments extends CollectionWidget {
 
         getAppointmentColor: this.option('getAppointmentColor'),
         getResourceDataAccessors: this.option('getResourceDataAccessors'),
+        timeZoneCalculator: this.option('timeZoneCalculator'),
       };
 
       if (this.isAgendaView) {

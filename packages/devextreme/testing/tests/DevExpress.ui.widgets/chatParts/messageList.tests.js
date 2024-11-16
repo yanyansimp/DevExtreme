@@ -44,6 +44,8 @@ const moduleConfig = {
 
             this.getScrollView = () => ScrollView.getInstance(this.$element.find(`.${SCROLLVIEW_CLASS}`));
             this.getDayHeaders = () => $(this.getScrollView().content()).find(`.${CHAT_MESSAGELIST_DAY_HEADER_CLASS}`);
+            this.getMessageGroups = () => this.$element.find(`.${CHAT_MESSAGEGROUP_CLASS}`);
+            this.getBubbles = () => this.$element.find(`.${CHAT_MESSAGEBUBBLE_CLASS}`);
 
             this.scrollView = this.getScrollView();
             this.$scrollViewContent = $(this.scrollView.content());
@@ -677,6 +679,56 @@ QUnit.module('MessageList', () => {
             assert.strictEqual($secondMessageGroupBubbles.length, 1, 'correct bubble count');
         });
 
+        QUnit.test('new messages should be rendered after the last group', function(assert) {
+            const items = [
+                {
+                    timestamp: '2024-09-26T14:00:00',
+                    text: 'first messagegroup',
+                    author: userFirst,
+                },
+                {
+                    timestamp: '2024-09-26T14:02:00',
+                    text: 'first messagegroup',
+                    author: userFirst,
+                },
+                {
+                    timestamp: '2024-09-26T14:05:01',
+                    text: 'first messagegroup',
+                    author: userFirst,
+                },
+                {
+                    timestamp: '2024-09-26T14:10:02',
+                    text: 'second messagegroup',
+                    author: userSecond,
+                },
+            ];
+
+            this.reinit({
+                items,
+                showDayHeaders: false,
+                currentUserId: userFirst.id,
+            });
+
+            let $messageGroups = this.getMessageGroups();
+
+            assert.strictEqual($messageGroups.length, 2, 'correct messagegroup count');
+            assert.strictEqual($messageGroups.eq(0).find(`.${CHAT_MESSAGEBUBBLE_CLASS}`).length, 3, 'correct bubble count');
+            assert.strictEqual($messageGroups.eq(1).find(`.${CHAT_MESSAGEBUBBLE_CLASS}`).length, 1, 'correct bubble count');
+
+            this.instance.option('items', [...items, {
+                timestamp: '2024-09-26T14:05:05',
+                text: 'message_text',
+                author: userFirst,
+            }]);
+
+            $messageGroups = this.getMessageGroups();
+
+            assert.strictEqual($messageGroups.length, 3, 'correct messagegroup count');
+            assert.strictEqual($messageGroups.eq(0).find(`.${CHAT_MESSAGEBUBBLE_CLASS}`).length, 3, 'correct bubble count');
+            assert.strictEqual($messageGroups.eq(1).find(`.${CHAT_MESSAGEBUBBLE_CLASS}`).length, 1, 'correct bubble count');
+            assert.strictEqual($messageGroups.eq(2).find(`.${CHAT_MESSAGEBUBBLE_CLASS}`).length, 1, 'correct bubble count');
+        });
+
         QUnit.test(`new message group should not be rendered if ${MESSAGEGROUP_TIMEOUT} ms elapsed between the first and new messages at runtime`, function(assert) {
             const user = { id: 1 };
 
@@ -824,6 +876,34 @@ QUnit.module('MessageList', () => {
                 assert.strictEqual($messageGroups.last().hasClass(expectedLastGroupClass), true, 'last group has expected class');
                 assert.strictEqual($lastGroup.length, 1, 'only one message group has expected class');
             });
+        });
+
+        QUnit.test('messageTemplate should be passed to messageGroup on init', function(assert) {
+            const messageTemplate = () => {};
+
+            this.reinit({
+                items: [{ text: 'text' }],
+                messageTemplate,
+            });
+
+            const messageGroup = MessageGroup.getInstance(this.$element.find(`.${CHAT_MESSAGEGROUP_CLASS}`));
+
+            assert.strictEqual(messageGroup.option('messageTemplate'), messageTemplate, 'messageTemplate is passed to messageGroup');
+        });
+
+        QUnit.test('messageTemplate should be passed to messageGroup at runtime', function(assert) {
+
+            this.reinit({
+                items: [{ text: 'text' }],
+            });
+
+            const messageTemplate = () => {};
+
+            this.instance.option('messageTemplate', messageTemplate);
+
+            const messageGroup = MessageGroup.getInstance(this.$element.find(`.${CHAT_MESSAGEGROUP_CLASS}`));
+
+            assert.strictEqual(messageGroup.option('messageTemplate'), messageTemplate, 'messageTemplate is passed to messageGroup');
         });
     });
 

@@ -5,42 +5,31 @@ import $ from '@js/core/renderer';
 import { isDefined } from '@js/core/utils/type';
 import type { Options as DataSourceOptions } from '@js/data/data_source';
 import DataHelperMixin from '@js/data_helper';
-import type { Format } from '@js/localization';
 import messageLocalization from '@js/localization/message';
 import type {
   Message,
   MessageEnteredEvent,
-  Properties as ChatProperties,
+  Properties,
   TypingEndEvent,
   TypingStartEvent,
 } from '@js/ui/chat';
 import type { OptionChanged } from '@ts/core/widget/types';
 import Widget from '@ts/core/widget/widget';
-import { applyBatch } from '@ts/data/m_array_utils';
 
 import AlertList from './alertlist';
-import ChatHeader from './header';
 import type {
   MessageEnteredEvent as MessageBoxMessageEnteredEvent,
   Properties as MessageBoxProperties,
   TypingStartEvent as MessageBoxTypingStartEvent,
 } from './messagebox';
 import MessageBox from './messagebox';
-import type { Change } from './messagelist';
+import type { Change, MessageTemplate, Properties as MessageListProperties } from './messagelist';
 import MessageList from './messagelist';
 
 const CHAT_CLASS = 'dx-chat';
 const TEXTEDITOR_INPUT_CLASS = 'dx-texteditor-input';
 
-type Properties = ChatProperties & {
-  title: string;
-  dayHeaderFormat?: Format;
-  messageTimestampFormat?: Format;
-};
-
 class Chat extends Widget<Properties> {
-  _chatHeader?: ChatHeader;
-
   _messageBox!: MessageBox;
 
   _messageList!: MessageList;
@@ -56,7 +45,6 @@ class Chat extends Widget<Properties> {
   _getDefaultOptions(): Properties {
     return {
       ...super._getDefaultOptions(),
-      title: '',
       showDayHeaders: true,
       activeStateEnabled: true,
       focusStateEnabled: true,
@@ -100,15 +88,10 @@ class Chat extends Widget<Properties> {
     if (e?.changes) {
       this._messageList._modifyByChanges(e.changes);
 
-      // @ts-expect-error
-      const dataSource = this.getDataSource();
-      // @ts-expect-error
-      applyBatch({
-        // // @ts-expect-error
-        keyInfo: dataSource,
-        data: this.option('items'),
-        changes: e.changes,
-      });
+      this._setOptionWithoutOptionChange('items', newItems.slice());
+      this._messageList._setOptionWithoutOptionChange('items', newItems.slice());
+
+      this._messageList._toggleEmptyView();
     } else {
       this.option('items', newItems.slice());
     }
@@ -127,12 +110,6 @@ class Chat extends Widget<Properties> {
 
     super._initMarkup();
 
-    const { title } = this.option();
-
-    if (title) {
-      this._renderHeader(title);
-    }
-
     this._renderMessageList();
     this._renderAlertList();
     this._renderMessageBox();
@@ -141,16 +118,19 @@ class Chat extends Widget<Properties> {
     this._updateMessageBoxAria();
   }
 
-  _renderHeader(title: string): void {
-    const $header = $('<div>');
+  _renderMessageList(): void {
+    const $messageList = $('<div>');
 
-    this.$element().append($header);
-    this._chatHeader = this._createComponent($header, ChatHeader, {
-      title,
-    });
+    this.$element().append($messageList);
+
+    this._messageList = this._createComponent(
+      $messageList,
+      MessageList,
+      this._getMessageListOptions(),
+    );
   }
 
-  _renderMessageList(): void {
+  _getMessageListOptions(): MessageListProperties {
     const {
       items = [],
       user,
@@ -158,26 +138,20 @@ class Chat extends Widget<Properties> {
       showAvatar = false,
       showUserName = false,
       showMessageTimestamp = false,
-      messageTemplate,
       dayHeaderFormat,
       messageTimestampFormat,
       typingUsers = [],
     } = this.option();
 
-    const $messageList = $('<div>');
-
     // @ts-expect-error
     const isLoading = this._dataController.isLoading();
     const currentUserId = user?.id;
 
-    this.$element().append($messageList);
-
-    this._messageList = this._createComponent($messageList, MessageList, {
+    const options: MessageListProperties = {
       items,
       currentUserId,
+      messageTemplate: this._getMessageTemplate(),
       showDayHeaders,
-      messageTemplate,
-      messageTemplateData: { component: this },
       showAvatar,
       showUserName,
       showMessageTimestamp,
@@ -185,7 +159,28 @@ class Chat extends Widget<Properties> {
       messageTimestampFormat,
       typingUsers,
       isLoading,
-    });
+    };
+
+    return options;
+  }
+
+  _getMessageTemplate(): MessageTemplate {
+    const { messageTemplate } = this.option();
+    if (messageTemplate) {
+      return (message, $container): void => {
+        const template = this._getTemplateByOption('messageTemplate');
+
+        template.render({
+          container: $container,
+          model: {
+            component: this,
+            message,
+          },
+        });
+      };
+    }
+
+    return null;
   }
 
   _renderAlertList(): void {
@@ -319,19 +314,6 @@ class Chat extends Widget<Properties> {
       case 'hoverStateEnabled':
         this._messageBox.option(name, value);
         break;
-      case 'title': {
-        if (value) {
-          if (this._chatHeader) {
-            this._chatHeader.option('title', value);
-          } else {
-            this._renderHeader(value);
-          }
-        } else if (this._chatHeader) {
-          this._chatHeader.dispose();
-          this._chatHeader.$element().remove();
-        }
-        break;
-      }
       case 'user': {
         const author = value as Properties[typeof name];
 
@@ -364,11 +346,13 @@ class Chat extends Widget<Properties> {
       case 'showMessageTimestamp':
         this._messageList.option(name, !!value);
         break;
-      case 'messageTemplate':
       case 'dayHeaderFormat':
       case 'messageTimestampFormat':
       case 'typingUsers':
         this._messageList.option(name, value);
+        break;
+      case 'messageTemplate':
+        this._messageList.option(name, this._getMessageTemplate());
         break;
       case 'reloadOnChange':
         break;

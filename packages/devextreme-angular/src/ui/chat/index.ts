@@ -22,9 +22,11 @@ import {
 } from '@angular/core';
 
 
-import { Store } from 'devextreme/data';
-import DataSource, { Options as DataSourceOptions } from 'devextreme/data/data_source';
-import { Alert, DisposingEvent, InitializedEvent, Message, MessageEnteredEvent, OptionChangedEvent, TypingEndEvent, TypingStartEvent, User } from 'devextreme/ui/chat';
+import DataSource from 'devextreme/data/data_source';
+import { Alert, Message, DisposingEvent, InitializedEvent, MessageEnteredEvent, OptionChangedEvent, TypingEndEvent, TypingStartEvent, User } from 'devextreme/ui/chat';
+import { DataSourceOptions } from 'devextreme/data/data_source';
+import { Store } from 'devextreme/data/store';
+import { Format } from 'devextreme/localization';
 
 import DxChat from 'devextreme/ui/chat';
 
@@ -40,14 +42,18 @@ import {
 } from 'devextreme-angular/core';
 
 import { DxiAlertModule } from 'devextreme-angular/ui/nested';
+import { DxoDayHeaderFormatModule } from 'devextreme-angular/ui/nested';
 import { DxiItemModule } from 'devextreme-angular/ui/nested';
 import { DxoAuthorModule } from 'devextreme-angular/ui/nested';
+import { DxoMessageTimestampFormatModule } from 'devextreme-angular/ui/nested';
 import { DxiTypingUserModule } from 'devextreme-angular/ui/nested';
 import { DxoUserModule } from 'devextreme-angular/ui/nested';
 
 import { DxiChatAlertModule } from 'devextreme-angular/ui/chat/nested';
-import { DxiChatItemModule } from 'devextreme-angular/ui/chat/nested';
 import { DxoChatAuthorModule } from 'devextreme-angular/ui/chat/nested';
+import { DxoChatDayHeaderFormatModule } from 'devextreme-angular/ui/chat/nested';
+import { DxiChatItemModule } from 'devextreme-angular/ui/chat/nested';
+import { DxoChatMessageTimestampFormatModule } from 'devextreme-angular/ui/chat/nested';
 import { DxiChatTypingUserModule } from 'devextreme-angular/ui/chat/nested';
 import { DxoChatUserModule } from 'devextreme-angular/ui/chat/nested';
 
@@ -121,11 +127,24 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
     
      */
     @Input()
-    get dataSource(): Store | DataSource | DataSourceOptions | null | string | Array<Message> {
+    get dataSource(): Array<Message> | DataSource | DataSourceOptions | null | Store | string {
         return this._getOption('dataSource');
     }
-    set dataSource(value: Store | DataSource | DataSourceOptions | null | string | Array<Message>) {
+    set dataSource(value: Array<Message> | DataSource | DataSourceOptions | null | Store | string) {
         this._setOption('dataSource', value);
+    }
+
+
+    /**
+     * [descr:dxChatOptions.dayHeaderFormat]
+    
+     */
+    @Input()
+    get dayHeaderFormat(): Format {
+        return this._getOption('dayHeaderFormat');
+    }
+    set dayHeaderFormat(value: Format) {
+        this._setOption('dayHeaderFormat', value);
     }
 
 
@@ -147,10 +166,10 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
     
      */
     @Input()
-    get elementAttr(): any {
+    get elementAttr(): Record<string, any> {
         return this._getOption('elementAttr');
     }
-    set elementAttr(value: any) {
+    set elementAttr(value: Record<string, any>) {
         this._setOption('elementAttr', value);
     }
 
@@ -173,10 +192,10 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
     
      */
     @Input()
-    get height(): number | Function | string | undefined {
+    get height(): (() => number | string) | number | string | undefined {
         return this._getOption('height');
     }
-    set height(value: number | Function | string | undefined) {
+    set height(value: (() => number | string) | number | string | undefined) {
         this._setOption('height', value);
     }
 
@@ -225,11 +244,24 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
     
      */
     @Input()
-    get messageTemplate(): null {
+    get messageTemplate(): any {
         return this._getOption('messageTemplate');
     }
-    set messageTemplate(value: null) {
+    set messageTemplate(value: any) {
         this._setOption('messageTemplate', value);
+    }
+
+
+    /**
+     * [descr:dxChatOptions.messageTimestampFormat]
+    
+     */
+    @Input()
+    get messageTimestampFormat(): Format {
+        return this._getOption('messageTimestampFormat');
+    }
+    set messageTimestampFormat(value: Format) {
+        this._setOption('messageTimestampFormat', value);
     }
 
 
@@ -355,10 +387,10 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
     
      */
     @Input()
-    get width(): number | Function | string | undefined {
+    get width(): (() => number | string) | number | string | undefined {
         return this._getOption('width');
     }
-    set width(value: number | Function | string | undefined) {
+    set width(value: (() => number | string) | number | string | undefined) {
         this._setOption('width', value);
     }
 
@@ -436,7 +468,14 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
      * This member supports the internal infrastructure and is not intended to be used directly from your code.
     
      */
-    @Output() dataSourceChange: EventEmitter<Store | DataSource | DataSourceOptions | null | string | Array<Message>>;
+    @Output() dataSourceChange: EventEmitter<Array<Message> | DataSource | DataSourceOptions | null | Store | string>;
+
+    /**
+    
+     * This member supports the internal infrastructure and is not intended to be used directly from your code.
+    
+     */
+    @Output() dayHeaderFormatChange: EventEmitter<Format>;
 
     /**
     
@@ -450,7 +489,7 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
      * This member supports the internal infrastructure and is not intended to be used directly from your code.
     
      */
-    @Output() elementAttrChange: EventEmitter<any>;
+    @Output() elementAttrChange: EventEmitter<Record<string, any>>;
 
     /**
     
@@ -464,7 +503,7 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
      * This member supports the internal infrastructure and is not intended to be used directly from your code.
     
      */
-    @Output() heightChange: EventEmitter<number | Function | string | undefined>;
+    @Output() heightChange: EventEmitter<(() => number | string) | number | string | undefined>;
 
     /**
     
@@ -492,7 +531,14 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
      * This member supports the internal infrastructure and is not intended to be used directly from your code.
     
      */
-    @Output() messageTemplateChange: EventEmitter<null>;
+    @Output() messageTemplateChange: EventEmitter<any>;
+
+    /**
+    
+     * This member supports the internal infrastructure and is not intended to be used directly from your code.
+    
+     */
+    @Output() messageTimestampFormatChange: EventEmitter<Format>;
 
     /**
     
@@ -562,7 +608,7 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
      * This member supports the internal infrastructure and is not intended to be used directly from your code.
     
      */
-    @Output() widthChange: EventEmitter<number | Function | string | undefined>;
+    @Output() widthChange: EventEmitter<(() => number | string) | number | string | undefined>;
 
 
 
@@ -648,6 +694,7 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
             { emit: 'activeStateEnabledChange' },
             { emit: 'alertsChange' },
             { emit: 'dataSourceChange' },
+            { emit: 'dayHeaderFormatChange' },
             { emit: 'disabledChange' },
             { emit: 'elementAttrChange' },
             { emit: 'focusStateEnabledChange' },
@@ -656,6 +703,7 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
             { emit: 'hoverStateEnabledChange' },
             { emit: 'itemsChange' },
             { emit: 'messageTemplateChange' },
+            { emit: 'messageTimestampFormatChange' },
             { emit: 'reloadOnChangeChange' },
             { emit: 'rtlEnabledChange' },
             { emit: 'showAvatarChange' },
@@ -719,13 +767,17 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
 @NgModule({
   imports: [
     DxiAlertModule,
+    DxoDayHeaderFormatModule,
     DxiItemModule,
     DxoAuthorModule,
+    DxoMessageTimestampFormatModule,
     DxiTypingUserModule,
     DxoUserModule,
     DxiChatAlertModule,
-    DxiChatItemModule,
     DxoChatAuthorModule,
+    DxoChatDayHeaderFormatModule,
+    DxiChatItemModule,
+    DxoChatMessageTimestampFormatModule,
     DxiChatTypingUserModule,
     DxoChatUserModule,
     DxIntegrationModule,
@@ -737,13 +789,17 @@ export class DxChatComponent extends DxComponent implements OnDestroy, OnChanges
   exports: [
     DxChatComponent,
     DxiAlertModule,
+    DxoDayHeaderFormatModule,
     DxiItemModule,
     DxoAuthorModule,
+    DxoMessageTimestampFormatModule,
     DxiTypingUserModule,
     DxoUserModule,
     DxiChatAlertModule,
-    DxiChatItemModule,
     DxoChatAuthorModule,
+    DxoChatDayHeaderFormatModule,
+    DxiChatItemModule,
+    DxoChatMessageTimestampFormatModule,
     DxiChatTypingUserModule,
     DxoChatUserModule,
     DxTemplateModule

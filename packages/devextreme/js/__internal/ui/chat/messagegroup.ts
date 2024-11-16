@@ -11,11 +11,13 @@ import type { OptionChanged } from '@ts/core/widget/types';
 import Widget from '@ts/core/widget/widget';
 
 import Avatar from './avatar';
-import type Chat from './chat';
+import type { Properties as MessageBubbleProperties } from './messagebubble';
 import MessageBubble from './messagebubble';
 import type { MessageTemplate } from './messagelist';
 
-const CHAT_MESSAGEGROUP_CLASS = 'dx-chat-messagegroup';
+export const MESSAGE_DATA_KEY = 'dxMessageData';
+
+export const CHAT_MESSAGEGROUP_CLASS = 'dx-chat-messagegroup';
 export const CHAT_MESSAGEGROUP_ALIGNMENT_START_CLASS = 'dx-chat-messagegroup-alignment-start';
 export const CHAT_MESSAGEGROUP_ALIGNMENT_END_CLASS = 'dx-chat-messagegroup-alignment-end';
 const CHAT_MESSAGEGROUP_INFORMATION_CLASS = 'dx-chat-messagegroup-information';
@@ -32,7 +34,6 @@ export interface Properties extends WidgetOptions<MessageGroup> {
   showUserName: boolean;
   showMessageTimestamp: boolean;
   messageTemplate?: MessageTemplate;
-  messageTemplateData?: { component?: Chat };
   messageTimestampFormat?: Format;
 }
 
@@ -52,7 +53,6 @@ class MessageGroup extends Widget<Properties> {
       showUserName: true,
       showMessageTimestamp: true,
       messageTemplate: null,
-      messageTemplateData: {},
       messageTimestampFormat: 'shorttime',
     };
   }
@@ -111,19 +111,28 @@ class MessageGroup extends Widget<Properties> {
   }
 
   _renderMessageBubble(message: Message): void {
-    const $bubble = $('<div>');
-    const { messageTemplate, messageTemplateData } = this.option();
+    const $bubble = $('<div>')
+      .data(MESSAGE_DATA_KEY, message);
 
-    this._createComponent($bubble, MessageBubble, {
-      text: message.text,
-      template: messageTemplate,
-      templateData: {
-        ...messageTemplateData,
-        message,
-      },
-    });
+    this._createComponent($bubble, MessageBubble, this._getMessageBubbleOptions(message));
 
     this._$messageBubbleContainer.append($bubble);
+  }
+
+  _getMessageBubbleOptions(message: Message): MessageBubbleProperties {
+    const options: MessageBubbleProperties = {
+      text: message.text,
+    };
+
+    const { messageTemplate } = this.option();
+
+    if (messageTemplate) {
+      options.template = (text, container): void => {
+        messageTemplate({ ...message, text }, container);
+      };
+    }
+
+    return options;
   }
 
   _renderMessageBubbles(items: Message[]): void {

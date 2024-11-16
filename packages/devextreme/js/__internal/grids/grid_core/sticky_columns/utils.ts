@@ -12,14 +12,51 @@ export const getColumnFixedPosition = (
 ): StickyPosition => {
   const { fixedPosition }: { fixedPosition: StickyPosition } = column;
   const rtlEnabled = that.option('rtlEnabled');
+  // NOTE: in RTL for master-detail & group rows, command column has already right position
+  const isExceptionCommandColumn = column.command
+    && column.command === 'expand';
   const isDefaultCommandColumn = column.command
     && !gridCoreUtils.isCustomCommandColumn(that._columns, column);
 
-  if (isDefaultCommandColumn && rtlEnabled) {
+  if (isDefaultCommandColumn && rtlEnabled && !isExceptionCommandColumn) {
     return fixedPosition === StickyPosition.Right ? StickyPosition.Left : StickyPosition.Right;
   }
 
   return fixedPosition ?? StickyPosition.Left;
+};
+
+export const needToDisableStickyColumn = function (
+  that: ColumnsController,
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  column,
+): boolean {
+  return that.isVirtualMode() && !!column.fixed && column.fixedPosition === StickyPosition.Sticky;
+};
+
+/* TODO: Need to rename this method to hasStickyColumns
+   after removing old fixed columns implementation */
+export const hasFixedColumnsWithStickyPosition = function (that: ColumnsController): boolean {
+  if (that.isVirtualMode()) {
+    return false;
+  }
+
+  return !!that
+    .getStickyColumns()
+    .filter((column) => column.fixedPosition === StickyPosition.Sticky).length;
+};
+
+export const processFixedColumns = function (
+  that: ColumnsController,
+  columns: object[],
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+): any {
+  return columns.map((column: object) => {
+    if (needToDisableStickyColumn(that, column)) {
+      return { ...column, fixed: false, fixedPosition: '' };
+    }
+
+    return column;
+  });
 };
 
 const getStickyOffsetCore = function (
@@ -119,7 +156,7 @@ const prevColumnIsFixedCore = function (
   const prevColumn = getPrevColumn(that, column, visibleColumns, rowIndex);
   const fixedPosition = getColumnFixedPosition(that, column);
 
-  return !!prevColumn?.fixed
+  return !!prevColumn?.fixed && !needToDisableStickyColumn(that, prevColumn)
     && (!column.fixed
       || fixedPosition === StickyPosition.Sticky
       || fixedPosition !== getColumnFixedPosition(that, prevColumn)

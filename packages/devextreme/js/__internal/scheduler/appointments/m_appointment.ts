@@ -150,10 +150,8 @@ export class Appointment extends DOMComponent {
     this._renderDragSourceClass();
     this._renderDirection();
 
-    const text = ExpressionUtils.getField(this.option('dataAccessors'), 'text', this.rawAppointment);
-    (this.$element() as any).attr('title', text);
     (this.$element() as any).data('dxAppointmentStartDate', this.option('startDate'));
-    (this.$element() as any).attr('role', 'button');
+    (this.$element() as any).attr('role', 'application');
 
     this._renderRecurrenceClass();
     this._renderResizable();
@@ -278,20 +276,27 @@ export class Appointment extends DOMComponent {
     });
   }
 
-  _getEndDate() {
-    const result = ExpressionUtils.getField(this.option('dataAccessors'), 'endDate', this.rawAppointment);
-    if (result) {
-      return new Date(result);
+  _getDate(propName: 'endDate' | 'startDate') {
+    const result = ExpressionUtils.getField(this.option('dataAccessors'), propName, this.rawAppointment);
+    if (!result) {
+      return result;
     }
-    return result;
+
+    const date = new Date(result);
+    const timeZoneCalculator = this.option('timeZoneCalculator') as any;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return timeZoneCalculator
+      ? timeZoneCalculator.createDate(date, { path: 'toGrid' })
+      : date;
+  }
+
+  _getEndDate() {
+    return this._getDate('endDate');
   }
 
   _getStartDate() {
-    const result = ExpressionUtils.getField(this.option('dataAccessors'), 'startDate', this.rawAppointment);
-    if (result) {
-      return new Date(result);
-    }
-    return result;
+    return this._getDate('startDate');
   }
 
   _renderAllDayClass() {
